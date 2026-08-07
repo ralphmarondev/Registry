@@ -2,7 +2,7 @@ package com.ralphmarondev.registry.service
 
 import com.ralphmarondev.registry.dto.FamilyRequest
 import com.ralphmarondev.registry.dto.FamilyResponse
-import com.ralphmarondev.registry.entity.Family
+import com.ralphmarondev.registry.mapper.toFamily
 import com.ralphmarondev.registry.mapper.toResponse
 import com.ralphmarondev.registry.repository.FamilyRepository
 import org.springframework.stereotype.Service
@@ -32,15 +32,7 @@ class FamilyService(
         if (familyRepository.findByCode(request.code) != null) {
             throw RuntimeException("Family code already exists.")
         }
-        val family = Family(
-            code = request.code,
-            name = request.name,
-            blockNumber = request.blockNumber,
-            barangay = request.barangay,
-            city = request.city,
-            province = request.province,
-            landline = request.landline
-        )
+        val family = request.toFamily()
         return familyRepository.save(family).toResponse()
     }
 

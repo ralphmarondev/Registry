@@ -21,5 +21,7 @@ fun Member.toResponse() = MemberResponse(
     educationalAttainment = educationalAttainment,
     isHead = isHead,
     relationshipToHead = relationshipToHead,
+    isIndigenous = isIndigenous,
+    indigenousGroup = indigenousGroup,
     isDeleted = isDeleted
 )

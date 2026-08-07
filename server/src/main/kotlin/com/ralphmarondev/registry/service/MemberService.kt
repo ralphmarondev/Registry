@@ -46,7 +46,9 @@ class MemberService(
             occupation = request.occupation,
             educationalAttainment = request.educationalAttainment,
             isHead = request.isHead,
-            relationshipToHead = request.relationshipToHead
+            relationshipToHead = request.relationshipToHead,
+            isIndigenous = request.isIndigenous,
+            indigenousGroup = request.indigenousGroup
         )
         return memberRepository.save(member).toResponse()
     }
@@ -75,6 +77,8 @@ class MemberService(
             educationalAttainment = request.educationalAttainment,
             isHead = request.isHead,
             relationshipToHead = request.relationshipToHead,
+            isIndigenous = request.isIndigenous,
+            indigenousGroup = request.indigenousGroup,
             updateDate = LocalDateTime.now()
         )
         return memberRepository.save(updated).toResponse()

@@ -21,7 +21,9 @@ data class MemberRequest(
     val occupation: String,
     val educationalAttainment: String,
     val isHead: Boolean,
-    val relationshipToHead: RelationshipToHead
+    val relationshipToHead: RelationshipToHead,
+    val isIndigenous: Boolean,
+    val indigenousGroup: String? = null
 )
 
 data class MemberResponse(
@@ -42,5 +44,7 @@ data class MemberResponse(
     val educationalAttainment: String,
     val isHead: Boolean,
     val relationshipToHead: RelationshipToHead,
+    val isIndigenous: Boolean,
+    val indigenousGroup: String? = null,
     val isDeleted: Boolean
 )
