@@ -28,4 +28,10 @@ class FamilyController(
             ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(family)
     }
+
+    @DeleteMapping("{id}/")
+    fun delete(@PathVariable id: Long): ResponseEntity<Void> {
+        familyService.delete(id)
+        return ResponseEntity.noContent().build()
+    }
 }
