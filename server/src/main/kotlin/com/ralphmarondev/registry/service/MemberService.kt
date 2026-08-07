@@ -130,7 +130,10 @@ class MemberService(
             .map {
                 BeneficiaryProgramResponse(
                     id = it.beneficiaryProgram.id,
-                    name = it.beneficiaryProgram.name
+                    name = it.beneficiaryProgram.name,
+                    description = it.beneficiaryProgram.description,
+                    createDate = it.beneficiaryProgram.createDate,
+                    updateDate = it.beneficiaryProgram.updateDate
                 )
             }
     }

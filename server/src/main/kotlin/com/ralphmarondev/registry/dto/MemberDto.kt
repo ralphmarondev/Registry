@@ -50,8 +50,3 @@ data class MemberResponse(
     val beneficiaryPrograms: List<BeneficiaryProgramResponse>,
     val isDeleted: Boolean
 )
-
-data class BeneficiaryProgramResponse(
-    val id: Long = 0,
-    val name: String = ""
-)
