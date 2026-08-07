@@ -2,6 +2,7 @@ package com.ralphmarondev.registry.entity
 
 import com.ralphmarondev.registry.enums.HouseholdType
 import com.ralphmarondev.registry.enums.HousingOwnership
+import com.ralphmarondev.registry.enums.RegistrationStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -27,8 +28,9 @@ data class Family(
     @Enumerated(EnumType.STRING)
     @Column(name = "housing_ownership")
     val housingOwnership: HousingOwnership,
+    @Enumerated(EnumType.STRING)
     @Column(name = "registration_status")
-    val registrationStatus: String,
+    val registrationStatus: RegistrationStatus,
     @Column(name = "is_deleted")
     val isDeleted: Boolean = false,
     @Column(name = "create_date")
