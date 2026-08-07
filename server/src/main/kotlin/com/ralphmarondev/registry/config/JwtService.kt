@@ -44,7 +44,7 @@ class JwtService {
             .body.subject.toLong()
     }
 
-    fun extractEmail(token: String): String {
+    fun extractUsername(token: String): String {
         return Jwts.parserBuilder()
             .setSigningKey(key)
             .build()
