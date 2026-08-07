@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface MemberBeneficiaryRepository : JpaRepository<MemberBeneficiary, Long> {
-    fun finByMemberId(memberId: Long): List<MemberBeneficiary>
+    fun findByMemberId(memberId: Long): List<MemberBeneficiary>
 }
