@@ -1,6 +1,6 @@
 <template>
 	<div class="min-h-screen flex flex-col bg-linear-to-br from-emerald-50 via-white to-green-50 animate-fade-in">
-		<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-emerald-100/50">
+		<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-emerald-100/50">
 			<div class="container mx-auto px-6">
 				<div class="max-w-6xl mx-auto flex items-center justify-between py-4">
 					<div class="flex items-center gap-3 group cursor-pointer">
@@ -20,34 +20,21 @@
 			</div>
 		</header>
 
-		<main class="flex-1 flex items-center pt-24 pb-12">
+		<main class="flex-1 flex items-center min-h-screen pt-24 pb-12">
 			<div class="container mx-auto px-6">
 				<div class="max-w-6xl mx-auto">
 					<div class="grid lg:grid-cols-2 gap-16 items-center">
 						<!-- Left Content -->
 						<div class="space-y-6 order-2 lg:order-1 text-center lg:text-left">
-							<div class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100/80 backdrop-blur-sm rounded-full text-emerald-700 text-sm font-medium">
-								<span class="relative flex h-2 w-2">
-									<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-									<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-								</span>
-								Municipality of Gonzaga
-							</div>
-
-							<!-- Main Heading -->
 							<h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
 								<span class="text-gray-800">Profiling</span>
 								<br>
 								<span class="bg-linear-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">Management</span>
 								<span class="text-gray-800"> System</span>
 							</h1>
-
-							<!-- Subtitle -->
 							<p class="text-xl text-emerald-600 font-semibold">
 								Gonzaga, Cagayan
 							</p>
-
-							<!-- Description -->
 							<p class="text-gray-600 leading-relaxed max-w-lg mx-auto lg:mx-0 text-base">
 								A centralized digital platform for managing and maintaining
 								profiling records within the Municipality of Gonzaga,
@@ -63,8 +50,6 @@
 								<!-- Decorative circles -->
 								<div class="absolute -top-10 -right-10 w-48 h-48 bg-emerald-200/30 rounded-full blur-3xl"></div>
 								<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-green-200/30 rounded-full blur-3xl"></div>
-
-								<!-- Simple image with shadow -->
 								<img src="/favicon.svg"
 								     alt="Profiling System"
 								     class="w-72 h-72 object-contain animate-float drop-shadow-2xl">
