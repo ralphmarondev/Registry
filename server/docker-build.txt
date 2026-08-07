@@ -1,0 +1,443 @@
+Welcome to Ubuntu 24.04.4 LTS (GNU/Linux 6.18.33.2-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Aug  7 13:19:53 PST 2026
+
+  System load:  1.6                 Processes:             56
+  Usage of /:   2.5% of 1006.85GB   Users logged in:       0
+  Memory usage: 12%                 IPv4 address for eth0: 172.21.129.80
+  Swap usage:   0%
+
+
+This message is shown once a day. To disable it please create the
+/home/ralphmaron/.hushlogin file.
+ralphmaron@IdeaPad-Gaming-3-15IMH05:~$ cd /mnt/c/Users/ralphmaron/Projects/Registry/
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry$ cd server
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker build -t registry-api .
+[+] Building 267.5s (16/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     251.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     232.4s
+[+] Building 267.7s (16/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     251.9s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     232.5s
+[+] Building 267.8s (16/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     252.0s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     232.7s
+[+] Building 268.0s (16/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     252.2s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     232.8s
+[+] Building 268.9s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     253.1s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     233.7s
+ => => transferring context: 111.36kB                                                                           1.3s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+[+] Building 269.1s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     253.3s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     233.9s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 269.2s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     253.4s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     234.1s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 269.4s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     253.6s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     234.2s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 269.5s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     253.8s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     234.4s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 269.7s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     253.9s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     234.5s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 269.8s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     254.1s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     234.7s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 270.0s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     254.2s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     234.8s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 270.1s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     254.3s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     235.0s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 270.3s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     254.5s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     235.1s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 270.4s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     254.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     235.3s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 270.6s (18/20)                                                                           docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                     254.8s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                     235.4s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf7d119d8db67d56b0f56c485d2de4d55 5.92kB / 5.92kB                  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8cea7f6963938c19c300c6a15770a0bc62 2.13kB / 2.13kB                  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38b423c6fb7e0571bd36fe24de10b39e2 9.00kB / 9.00kB                  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60 41.57MB / 41.57MB                4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8 29.39MB / 29.39MB                9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de 389B / 389B                      2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb 53.12MB / 53.12MB                9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9 159B / 159B                      9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e69729f6881a73d0dc23676dbbd60                      15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967 2.28kB / 2.28kB                  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8ef4798f5636ece054a567b650de                       0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae78d786a857b9ada3197d8692e8                       2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d586d48dc253dbb778d76ec017cb                      10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe1a7cd62bab3fe5537ff8dc1cb9                       0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3208b4afb0f3c7f5e1f85ef5967                       0.0s
+ => [stage-1 2/3] WORKDIR /app                                                                                  8.3s
+ => [builder  2/11] WORKDIR /app                                                                                5.2s
+ => [builder  3/11] COPY gradlew .                                                                              1.5s
+[+] Building 270.6s (18/20)                            docker:default
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e  254.8s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e  235.4s
+ => [builder  3/11] COPY gradlew .                               1.5s
+ => [builder  4/11] COPY gradlew.bat .                           0.2s
+ => [builder  5/11] COPY gradle ./gradle                         0.2s
+ => [builder  6/11] COPY build.gradle.kts .                      0.3s
+ => [builder  7/11] COPY settings.gradle.kts .                   0.2s
+ => [builder  8/11] RUN chmod +x gradlew                         1.5s
+ => [builder  9/11] RUN ./gradlew dependencies --no-daemon ||  199.5s
+ => [builder 10/11] COPY src ./src                               0.3s
+ => [builder 11/11] RUN ./gradlew bootJar --no-daemon            1.7s
+ => => # To honour the JVM settings for this build a single-use Daemo
+ => => # will be forked. For more on this, please refer to https://do
+ => => # org/9.5.1/userguide/gradle_daemon.html#sec:disabling_the_dae
+[+] Building 344.2s (21/21) FINISHED                   docker:default
+ => [internal] load build definition from Dockerfile             0.2s
+ => => transferring dockerfile: 701B                             0.1s
+ => [internal] load metadata for docker.io/library/eclipse-temu  3.2s
+ => [internal] load metadata for docker.io/library/eclipse-temu  3.2s
+ => [auth] library/eclipse-temurin:pull token for registry-1.do  0.0s
+ => [internal] load .dockerignore                                0.1s
+ => => transferring context: 83B                                 0.0s
+ => [builder  1/11] FROM docker.io/library/eclipse-temurin:21-  55.9s
+ => => resolve docker.io/library/eclipse-temurin:21-jdk@sha256:  0.1s
+ => => sha256:efd34b940f2d5a621605c8531c2afb775 5.92kB / 5.92kB  0.0s
+ => => sha256:b3505e61d842e75a42b220ee71ed0fb03 2.14kB / 2.14kB  0.0s
+ => => sha256:169d9e1cc6d2b3babd22709f9b9e13746 9.39kB / 9.39kB  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4 41.57MB / 41.57MB  4.5s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8 389B / 389B  2.3s
+ => => sha256:c3a9fe54846acaef955f93e8e0ca45 33.31MB / 33.31MB  18.2s
+ => => sha256:ebdee3310c86d837aff52ed73140 158.17MB / 158.17MB  28.7s
+ => => sha256:6c8be82a45c02f8406922b2fbd8eacd30d30 158B / 158B  11.4s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e  328.4s
+ => => sha256:8037ff7aac833d5de2788285fb0b1e74 2.28kB / 2.28kB  13.0s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e  309.0s
+ => => extracting sha256:c3a9fe54846acaef955f93e8e0ca4514891aeb  2.9s
+ => => extracting sha256:ebdee3310c86d837aff52ed73140af52ef1e9  20.2s
+ => => extracting sha256:6c8be82a45c02f8406922b2fbd8eacd30d30b1  0.0s
+ => => extracting sha256:8037ff7aac833d5de2788285fb0b1e7410c85d  0.0s
+ => [internal] load build context                                3.8s
+ => => transferring context: 111.36kB                            1.3s
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jr  46.4s
+ => => resolve docker.io/library/eclipse-temurin:21-jre@sha256:  0.1s
+ => => sha256:8cef5fc7bebe421363ab543a2f4db5caf 5.92kB / 5.92kB  0.0s
+ => => sha256:f62477c02fb164d7e6eed0c6a70a2d8ce 2.13kB / 2.13kB  0.0s
+ => => sha256:c3686c504caafe2cd9388713653789f38 9.00kB / 9.00kB  0.0s
+ => => sha256:617772c7d19b9f9c4141bc73b37e6f4 41.57MB / 41.57MB  4.5s
+ => => sha256:c4e8c573f1880eec678b862d043508e 29.39MB / 29.39MB  9.3s
+ => => sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8 389B / 389B  2.2s
+ => => sha256:55ec27dd4dabba3cb9291f2b20ce6fe 53.12MB / 53.12MB  9.3s
+ => => sha256:85e71d7921a4de715c611d438091dc9f095cb 159B / 159B  9.2s
+ => => extracting sha256:617772c7d19b9f9c4141bc73b37e6f4c5e4e6  15.1s
+ => => sha256:9710d101e7a3be719551077cf621d1fd2 2.28kB / 2.28kB  9.7s
+ => => extracting sha256:a7fb98a8eddd1a70f99f205cb4b66e830a3e8e  0.0s
+ => => extracting sha256:c4e8c573f1880eec678b862d043508e3e672ae  2.5s
+ => => extracting sha256:55ec27dd4dabba3cb9291f2b20ce6fe6d6d0d  10.8s
+ => => extracting sha256:85e71d7921a4de715c611d438091dc9f095cbe  0.0s
+ => => extracting sha256:9710d101e7a3be719551077cf621d1fd206ff3  0.0s
+ => [stage-1 2/3] WORKDIR /app                                   8.3s
+ => [builder  2/11] WORKDIR /app                                 5.2s
+ => [builder  3/11] COPY gradlew .                               1.5s
+ => [builder  4/11] COPY gradlew.bat .                           0.2s
+ => [builder  5/11] COPY gradle ./gradle                         0.2s
+ => [builder  6/11] COPY build.gradle.kts .                      0.3s
+ => [builder  7/11] COPY settings.gradle.kts .                   0.2s
+ => [builder  8/11] RUN chmod +x gradlew                         1.5s
+ => [builder  9/11] RUN ./gradlew dependencies --no-daemon ||  199.5s
+ => [builder 10/11] COPY src ./src                               0.3s
+ => [builder 11/11] RUN ./gradlew bootJar --no-daemon           71.0s
+ => [stage-1 3/3] COPY --from=builder /app/build/libs/*.jar app  1.9s
+ => exporting to image                                           0.6s
+ => => exporting layers                                          0.4s
+ => => writing image sha256:775adc78502fe54f820a1e2a7c11ca8d3d2  0.0s
+ => => naming to docker.io/library/registry-api                  0.0s
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker images
+                                                  i Info →   U  In Use
+IMAGE                 ID             DISK USAGE   CONTENT SIZE   EXTRA
+django-api:latest     746a8cce45dc        235MB             0B
+django-api_web:latest
+                      af5a45b8d18e        182MB             0B
+hello-world:latest    e2ac70e7319a       10.1kB             0B
+myserver-web:latest   b82afef90e77        396MB             0B    U
+nginx:latest          60adc2e137e7        152MB             0B
+postgres:16           4b802c5161dd        452MB             0B
+postgres:17           406d234ef948        454MB             0B    U
+python:3.11-slim      040af88f5bce        124MB             0B
+ralphmaron/ralphmarondev:latest
+                      c7957f2e47d5       62.2MB             0B    U
+registry-api:latest   775adc78502f        405MB             0B
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker login
+Authenticating with existing credentials... [Username: ralphmaron]
+
+i Info → To login with a different account, run 'docker logout' followed by 'docker login'
+
+
+Login Succeeded
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker tag registry-api:latest ralphmaron/registry-api:latest
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker images
+                                     i Info →   U  In Use
+IMAGE            ID             DISK USAGE   CONTENT SIZE
+django-api:latest
+                 746a8cce45dc        235MB             0B
+django-api_web:latest
+                 af5a45b8d18e        182MB             0B
+hello-world:latest
+                 e2ac70e7319a       10.1kB             0B
+myserver-web:latest
+                 b82afef90e77        396MB             0B
+nginx:latest     60adc2e137e7        152MB             0B
+postgres:16      4b802c5161dd        452MB             0B
+postgres:17      406d234ef948        454MB             0B
+python:3.11-slim
+                 040af88f5bce        124MB             0B
+ralphmaron/ralphmarondev:latest
+                 c7957f2e47d5       62.2MB             0B
+ralphmaron/registry-api:latest
+                 775adc78502f        405MB             0B
+registry-api:latest
+                 775adc78502f        405MB             0B
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker push ralphmaron/register-api:latest
+The push refers to repository [docker.io/ralphmaron/register-api]
+An image does not exist locally with the tag: ralphmaron/register-api
+ 1 ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$ docker push ralphmaron/registry-api:latest
+The push refers to repository [docker.io/ralphmaron/registry-api]
+465d09004de7: Pushed
+611b6cedb7c9: Pushed
+2fc30bd7cfcb: Mounted from library/eclipse-temurin
+e2728656e020: Mounted from library/eclipse-temurin
+8d38727ad1e5: Mounted from library/eclipse-temurin
+3361aba1870c: Mounted from library/eclipse-temurin
+d474aac4fedc: Mounted from library/eclipse-temurin
+24d9bad9efb0: Mounted from library/eclipse-temurin
+latest: digest: sha256:a3f194f286edc72958737ee369e70da5c1dd2170070527c1e41e6fbaa54afac4 size: 1993
+ralphmaron@IdeaPad-Gaming-3-15IMH05:/mnt/c/Users/ralphmaron/Projects/Registry/server$

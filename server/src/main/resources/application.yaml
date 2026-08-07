@@ -27,6 +27,6 @@ logging:
 
 server:
   address: 0.0.0.0
-  port: 3333
+  port: ${PORT:3333}
   servlet:
     context-path: /api/
