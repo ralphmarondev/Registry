@@ -1,7 +1,7 @@
 package com.ralphmarondev.registry.enums
 
 enum class RelationshipToHead {
-    HEAD,
+    SELF,
     SPOUSE,
     CHILD
 }

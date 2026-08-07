@@ -43,6 +43,10 @@ data class Member(
     @Enumerated(EnumType.STRING)
     @Column(name = "relationship_to_head")
     val relationshipToHead: RelationshipToHead,
+    @Column(name = "is_indigenous")
+    val isIndigenous: Boolean = false,
+    @Column(name = "indigenous_group")
+    val indigenousGroup: String? = null,
     @Column(name = "is_deleted")
     val isDeleted: Boolean = false,
     @Column(name = "create_date")

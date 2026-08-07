@@ -1,5 +1,7 @@
 package com.ralphmarondev.registry.entity
 
+import com.ralphmarondev.registry.enums.HouseholdType
+import com.ralphmarondev.registry.enums.HousingOwnership
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -16,7 +18,17 @@ data class Family(
     val barangay: String,
     val city: String,
     val province: String,
-    val landline: String?,
+    val landline: String? = null,
+    @Column(name = "household_number")
+    val householdNumber: String? = null,
+    @Enumerated(EnumType.STRING)
+    @Column(name = "household_type")
+    val householdType: HouseholdType,
+    @Enumerated(EnumType.STRING)
+    @Column(name = "housing_ownership")
+    val housingOwnership: HousingOwnership,
+    @Column(name = "registration_status")
+    val registrationStatus: String,
     @Column(name = "is_deleted")
     val isDeleted: Boolean = false,
     @Column(name = "create_date")
