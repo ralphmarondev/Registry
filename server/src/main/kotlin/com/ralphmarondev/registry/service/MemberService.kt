@@ -137,4 +137,8 @@ class MemberService(
                 )
             }
     }
+
+    fun batch(requests: List<MemberRequest>): List<MemberResponse> {
+        return requests.map { create(it) }
+    }
 }

@@ -4,11 +4,7 @@ import com.ralphmarondev.registry.dto.RoleRequest
 import com.ralphmarondev.registry.dto.RoleResponse
 import com.ralphmarondev.registry.service.RoleService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("role/")
@@ -24,5 +20,10 @@ class RoleController(
     @GetMapping
     fun getAll(): List<RoleResponse> {
         return roleService.getAll()
+    }
+
+    @PostMapping("register/batch/")
+    fun batch(@RequestBody requests: List<RoleRequest>): ResponseEntity<List<RoleResponse>> {
+        return ResponseEntity.status(201).body(roleService.batch(requests))
     }
 }

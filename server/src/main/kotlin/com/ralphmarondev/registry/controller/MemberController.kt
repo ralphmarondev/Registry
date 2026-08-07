@@ -27,4 +27,9 @@ class MemberController(
         memberService.delete(id)
         return ResponseEntity.noContent().build()
     }
+
+    @PostMapping("register/batch/")
+    fun batch(@RequestBody requests: List<MemberRequest>): ResponseEntity<List<MemberResponse>> {
+        return ResponseEntity.status(201).body(memberService.batch(requests))
+    }
 }

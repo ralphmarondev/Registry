@@ -34,4 +34,9 @@ class FamilyController(
         familyService.delete(id)
         return ResponseEntity.noContent().build()
     }
+
+    @PostMapping("register/batch/")
+    fun batch(@RequestBody requests: List<FamilyRequest>): ResponseEntity<List<FamilyResponse>> {
+        return ResponseEntity.status(201).body(familyService.batch(requests))
+    }
 }

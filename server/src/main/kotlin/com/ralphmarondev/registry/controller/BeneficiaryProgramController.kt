@@ -21,4 +21,9 @@ class BeneficiaryProgramController(
     fun getAll(): List<BeneficiaryProgramResponse> {
         return beneficiaryProgramService.getAll()
     }
+
+    @PostMapping("batch/")
+    fun batch(@RequestBody requests: List<BeneficiaryProgramRequest>): ResponseEntity<List<BeneficiaryProgramResponse>> {
+        return ResponseEntity.status(201).body(beneficiaryProgramService.batch(requests))
+    }
 }

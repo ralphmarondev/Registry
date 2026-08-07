@@ -26,4 +26,11 @@ class AccountController(
     fun me(): ResponseEntity<AccountResponse> {
         return ResponseEntity.ok(accountService.me())
     }
+
+    @PostMapping("register/batch/")
+    fun batch(
+        @RequestBody requests: List<RegisterRequest>
+    ): ResponseEntity<List<RegisterResponse>> {
+        return ResponseEntity.status(201).body(accountService.batch(requests))
+    }
 }

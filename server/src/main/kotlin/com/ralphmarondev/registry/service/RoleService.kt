@@ -42,4 +42,8 @@ class RoleService(
         logger.info("Saving new role: ${request.name}")
         return roleRepository.save(role).toResponse()
     }
+
+    fun batch(requests: List<RoleRequest>): List<RoleResponse> {
+        return requests.map { create(it) }
+    }
 }

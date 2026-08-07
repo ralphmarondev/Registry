@@ -75,4 +75,8 @@ class AccountService(
 
         return account.toAccountResponse()
     }
+
+    fun batch(requests: List<RegisterRequest>): List<RegisterResponse> {
+        return requests.map { register(it) }
+    }
 }

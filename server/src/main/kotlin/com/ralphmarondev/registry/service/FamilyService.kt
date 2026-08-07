@@ -66,4 +66,8 @@ class FamilyService(
 
         familyRepository.save(deleted)
     }
+
+    fun batch(requests: List<FamilyRequest>): List<FamilyResponse> {
+        return requests.map { create(it) }
+    }
 }

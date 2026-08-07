@@ -29,4 +29,8 @@ class BeneficiaryProgramService(
         )
         return beneficiaryRepository.save(program).toResponse()
     }
+
+    fun batch(requests: List<BeneficiaryProgramRequest>): List<BeneficiaryProgramResponse> {
+        return requests.map { create(it) }
+    }
 }
