@@ -21,4 +21,11 @@ class FamilyController(
     fun getAll(): List<FamilyResponse> {
         return familyService.getAll()
     }
+
+    @GetMapping("{code}/")
+    fun getByCode(@PathVariable code: String): ResponseEntity<FamilyResponse> {
+        val family = familyService.getByCode(code)
+            ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(family)
+    }
 }
