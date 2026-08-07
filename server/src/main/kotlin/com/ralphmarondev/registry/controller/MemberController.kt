@@ -21,4 +21,10 @@ class MemberController(
     fun getAll(): List<MemberResponse> {
         return memberService.getAll()
     }
+
+    @DeleteMapping("{id}/")
+    fun delete(@PathVariable id: Long): ResponseEntity<Void> {
+        memberService.delete(id)
+        return ResponseEntity.noContent().build()
+    }
 }
