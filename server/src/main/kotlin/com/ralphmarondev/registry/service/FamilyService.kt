@@ -6,9 +6,11 @@ import com.ralphmarondev.registry.mapper.toFamily
 import com.ralphmarondev.registry.mapper.toResponse
 import com.ralphmarondev.registry.repository.FamilyRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Service
+@Transactional
 class FamilyService(
     private val familyRepository: FamilyRepository
 ) {

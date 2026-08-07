@@ -7,9 +7,11 @@ import com.ralphmarondev.registry.mapper.toResponse
 import com.ralphmarondev.registry.repository.FamilyRepository
 import com.ralphmarondev.registry.repository.MemberRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Service
+@Transactional
 class MemberService(
     private val memberRepository: MemberRepository,
     private val familyRepository: FamilyRepository
