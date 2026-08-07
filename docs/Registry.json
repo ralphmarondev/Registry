@@ -1,0 +1,340 @@
+{
+  "v": 12,
+  "name": "Registry",
+  "folders": [
+    {
+      "v": 12,
+      "name": "account",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "login",
+          "method": "POST",
+          "endpoint": "http://localhost:3333/api/account/login/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"username\": \"ralphmaron\",\n  \"password\": \"iscute\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "register",
+          "method": "POST",
+          "endpoint": "http://localhost:3333/api/account/register/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"username\": \"ralphmaron\",\n  \"password\": \"iscute\",\n  \"email\": \"edaralphmaron@gmail.com\",\n  \"roleId\": 2\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "me",
+          "method": "GET",
+          "endpoint": "http://localhost:3333/api/account/me/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDMxMzI0LCJleHAiOjE3ODYwMzQ5MjR9.sW8OI6pVf5n7IMFyjLqPaVrP3z2PyWve0CYKcpJ8mWI",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "list",
+          "method": "GET",
+          "endpoint": "http://localhost:3333/api/account/all/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg1OTQwNDI1LCJleHAiOjE3ODU5NDQwMjV9.HxEUQRKcYiZmfUqeBsYT_O5tFQQcgALifYKn-hE1HZw",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null,
+      "preRequestScript": "",
+      "testScript": ""
+    },
+    {
+      "v": 12,
+      "name": "role",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "create",
+          "method": "POST",
+          "endpoint": "http://localhost:3333/api/role/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"name\": \"User\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "list",
+          "method": "GET",
+          "endpoint": "http://localhost:3333/api/role/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null,
+      "preRequestScript": "",
+      "testScript": ""
+    },
+    {
+      "v": 12,
+      "name": "family",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "create",
+          "method": "POST",
+          "endpoint": "http://localhost:3333/api/family/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"code\": \"fam-002\",\n  \"name\": \"uzumaki\",\n  \"blockNumber\": \"972A\",\n  \"barangay\": \"Flourishing\",\n  \"city\": \"Gonzaga\",\n  \"province\": \"Cagayan\",\n  \"landline\": \"333-000-222\",\n  \"householdNumber\": \"3501\",\n  \"householdType\": \"NUCLEAR\",\n  \"housingOwnership\": \"OWNED\",\n  \"registrationStatus\": \"APPROVED\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "list",
+          "method": "GET",
+          "endpoint": "http://localhost:3333/api/family/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "endpoint": "http://localhost:3333/api/family/fam-002/",
+          "name": "get-by-code",
+          "params": [],
+          "headers": [],
+          "method": "GET",
+          "auth": {
+            "authType": "bearer",
+            "authActive": true,
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ"
+          },
+          "preRequestScript": "",
+          "testScript": "",
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "endpoint": "http://localhost:3333/api/family/2/",
+          "name": "delete",
+          "params": [],
+          "headers": [],
+          "method": "DELETE",
+          "auth": {
+            "authType": "bearer",
+            "authActive": true,
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ"
+          },
+          "preRequestScript": "",
+          "testScript": "",
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null,
+      "preRequestScript": "",
+      "testScript": ""
+    },
+    {
+      "v": 12,
+      "name": "member",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "list",
+          "method": "GET",
+          "endpoint": "http://localhost:3333/api/member/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY0NzQ4LCJleHAiOjE3ODYwNjgzNDh9._Qp4WQ9VkfEdjh0LoGRGJRFMQUmxJ1MTCO3_iihxne0",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "create",
+          "method": "POST",
+          "endpoint": "http://localhost:3333/api/member/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg1OTI1MjEyLCJleHAiOjE3ODU5Mjg4MTJ9.x3FXSBrDhSNstFu6X48awUfKUr5XjuxtEgq3AXBeKxU",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"familyId\": 1,\n  \"firstName\": \"Yor\",\n  \"middleName\": \"Grace\",\n  \"lastName\": \"Forger\",\n  \"suffix\": null,\n  \"sex\": \"FEMALE\",\n  \"dateOfBirth\": \"1987-04-06\",\n  \"placeOfBirth\": \"Berlint, Ostania\",\n  \"phoneNumber\": \"09171234568\",\n  \"civilStatus\": \"MARRIED\",\n  \"nationality\": \"Ostanian\",\n  \"religion\": \"Catholic\",\n  \"occupation\": \"City Hall Clerk\",\n  \"educationalAttainment\": \"College Graduate\",\n  \"isHead\": false,\n  \"relationshipToHead\": \"SPOUSE\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null,
+      "preRequestScript": "",
+      "testScript": ""
+    }
+  ],
+  "requests": [],
+  "auth": {
+    "authType": "none",
+    "authActive": true
+  },
+  "headers": [],
+  "variables": [],
+  "description": "",
+  "preRequestScript": "",
+  "testScript": ""
+}
