@@ -1,9 +1,12 @@
 package com.ralphmarondev.registry.mapper
 
+import com.ralphmarondev.registry.dto.BeneficiaryProgramResponse
 import com.ralphmarondev.registry.dto.MemberResponse
 import com.ralphmarondev.registry.entity.Member
 
-fun Member.toResponse() = MemberResponse(
+fun Member.toResponse(
+    beneficiaryPrograms: List<BeneficiaryProgramResponse> = emptyList()
+) = MemberResponse(
     id = id,
     family = family.id,
     firstName = firstName,
@@ -23,5 +26,6 @@ fun Member.toResponse() = MemberResponse(
     relationshipToHead = relationshipToHead,
     isIndigenous = isIndigenous,
     indigenousGroup = indigenousGroup,
+    beneficiaryPrograms = beneficiaryPrograms,
     isDeleted = isDeleted
 )

@@ -1,10 +1,14 @@
 package com.ralphmarondev.registry.service
 
+import com.ralphmarondev.registry.dto.BeneficiaryProgramResponse
 import com.ralphmarondev.registry.dto.MemberRequest
 import com.ralphmarondev.registry.dto.MemberResponse
 import com.ralphmarondev.registry.entity.Member
+import com.ralphmarondev.registry.entity.MemberBeneficiary
 import com.ralphmarondev.registry.mapper.toResponse
+import com.ralphmarondev.registry.repository.BeneficiaryProgramRepository
 import com.ralphmarondev.registry.repository.FamilyRepository
+import com.ralphmarondev.registry.repository.MemberBeneficiaryRepository
 import com.ralphmarondev.registry.repository.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +18,9 @@ import java.time.LocalDateTime
 @Transactional
 class MemberService(
     private val memberRepository: MemberRepository,
-    private val familyRepository: FamilyRepository
+    private val familyRepository: FamilyRepository,
+    private val beneficiaryProgramRepository: BeneficiaryProgramRepository,
+    private val memberBeneficiaryRepository: MemberBeneficiaryRepository
 ) {
     fun getAll(): List<MemberResponse> {
         return memberRepository.findAll()
@@ -52,7 +58,20 @@ class MemberService(
             isIndigenous = request.isIndigenous,
             indigenousGroup = request.indigenousGroup
         )
-        return memberRepository.save(member).toResponse()
+        val savedMember = memberRepository.save(member)
+
+        request.beneficiaryPrograms.forEach { programId ->
+            val program = beneficiaryProgramRepository.findById(programId)
+                .orElseThrow { RuntimeException("Beneficiary program not found.") }
+            memberBeneficiaryRepository.save(
+                MemberBeneficiary(
+                    member = savedMember,
+                    beneficiaryProgram = program
+                )
+            )
+        }
+
+        return savedMember.toResponse()
     }
 
     fun update(id: Long, request: MemberRequest): MemberResponse {
@@ -83,7 +102,16 @@ class MemberService(
             indigenousGroup = request.indigenousGroup,
             updateDate = LocalDateTime.now()
         )
-        return memberRepository.save(updated).toResponse()
+        val savedMember = memberRepository.save(updated)
+        memberBeneficiaryRepository.deleteAllByMemberId(id)
+
+        request.beneficiaryPrograms.forEach { programId ->
+            val program = beneficiaryProgramRepository.findById(programId)
+                .orElseThrow { RuntimeException("Beneficiary program not found.") }
+            memberBeneficiaryRepository.save(MemberBeneficiary(member = savedMember, beneficiaryProgram = program))
+        }
+
+        return savedMember.toResponse()
     }
 
     fun delete(id: Long) {
@@ -94,5 +122,16 @@ class MemberService(
             updateDate = LocalDateTime.now()
         )
         memberRepository.save(deleted)
+    }
+
+    private fun getBeneficiaryPrograms(memberId: Long): List<BeneficiaryProgramResponse> {
+        return memberBeneficiaryRepository.findByMemberId(memberId)
+            .filter { !it.isDeleted }
+            .map {
+                BeneficiaryProgramResponse(
+                    id = it.beneficiaryProgram.id,
+                    name = it.beneficiaryProgram.name
+                )
+            }
     }
 }

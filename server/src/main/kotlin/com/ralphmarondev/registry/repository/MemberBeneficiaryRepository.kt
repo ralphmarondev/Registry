@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MemberBeneficiaryRepository : JpaRepository<MemberBeneficiary, Long> {
     fun findByMemberId(memberId: Long): List<MemberBeneficiary>
+    fun deleteAllByMemberId(memberId: Long)
 }

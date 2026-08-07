@@ -23,7 +23,8 @@ data class MemberRequest(
     val isHead: Boolean,
     val relationshipToHead: RelationshipToHead,
     val isIndigenous: Boolean,
-    val indigenousGroup: String? = null
+    val indigenousGroup: String? = null,
+    val beneficiaryPrograms: List<Long> = emptyList()
 )
 
 data class MemberResponse(
@@ -46,5 +47,11 @@ data class MemberResponse(
     val relationshipToHead: RelationshipToHead,
     val isIndigenous: Boolean,
     val indigenousGroup: String? = null,
+    val beneficiaryPrograms: List<BeneficiaryProgramResponse>,
     val isDeleted: Boolean
+)
+
+data class BeneficiaryProgramResponse(
+    val id: Long = 0,
+    val name: String = ""
 )
