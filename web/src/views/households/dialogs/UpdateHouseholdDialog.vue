@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useBarangayStore } from '@/stores/barangay'
+import {computed, ref, watch} from 'vue'
+import {useBarangayStore} from '@/stores/barangay'
 import axiosInstance from '@/axiosInstance'
 
 // Props
@@ -44,27 +44,27 @@ const fetchError = ref<string | null>(null)
 
 // Household type options
 const householdTypeOptions = [
-	{ value: 'NUCLEAR', label: 'Nuclear' },
-	{ value: 'EXTENDED', label: 'Extended' },
-	{ value: 'JOINT', label: 'Joint' },
-	{ value: 'SINGLE_PARENT', label: 'Single Parent' }
+	{value: 'NUCLEAR', label: 'Nuclear'},
+	{value: 'EXTENDED', label: 'Extended'},
+	{value: 'JOINT', label: 'Joint'},
+	{value: 'SINGLE_PARENT', label: 'Single Parent'}
 ]
 
 // Housing ownership options
 const housingOwnershipOptions = [
-	{ value: 'OWNED', label: 'Owned' },
-	{ value: 'RENTED', label: 'Rented' },
-	{ value: 'LEASED', label: 'Leased' },
-	{ value: 'SHARED', label: 'Shared' },
-	{ value: 'OTHER', label: 'Other' }
+	{value: 'OWNED', label: 'Owned'},
+	{value: 'RENTED', label: 'Rented'},
+	{value: 'LEASED', label: 'Leased'},
+	{value: 'SHARED', label: 'Shared'},
+	{value: 'OTHER', label: 'Other'}
 ]
 
 // Registration status options
 const registrationStatusOptions = [
-	{ value: 'APPROVED', label: 'Approved' },
-	{ value: 'PENDING', label: 'Pending' },
-	{ value: 'REJECTED', label: 'Rejected' },
-	{ value: 'DRAFT', label: 'Draft' }
+	{value: 'APPROVED', label: 'Approved'},
+	{value: 'PENDING', label: 'Pending'},
+	{value: 'REJECTED', label: 'Rejected'},
+	{value: 'DRAFT', label: 'Draft'}
 ]
 
 // Computed dialog visibility
@@ -162,7 +162,7 @@ const handleSubmit = async () => {
 	submitError.value = null
 
 	try {
-		await axiosInstance.put(`family/${props.hose}/`, formData.value)
+		await axiosInstance.put(`family/${props.householdId}/`, formData.value)
 		emit('success')
 		dialogVisible.value = false
 		resetForm()
@@ -227,7 +227,8 @@ watch(() => props.householdId, (newVal) => {
 				</div>
 
 				<!-- Error State -->
-				<div v-else-if="fetchError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+				<div v-else-if="fetchError"
+				     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 					<i class="bx bx-error-circle text-xl"></i>
 					{{ fetchError }}
 				</div>
@@ -235,7 +236,8 @@ watch(() => props.householdId, (newVal) => {
 				<!-- Form -->
 				<form v-else @submit.prevent="handleSubmit" class="space-y-4">
 					<!-- Submit Error Alert -->
-					<div v-if="submitError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+					<div v-if="submitError"
+					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 						<i class="bx bx-error-circle text-xl"></i>
 						{{ submitError }}
 					</div>
