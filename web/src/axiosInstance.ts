@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-	baseURL:  import.meta.env.VITE_BASE_URL || 'http://localhost:3333/api/',
+	baseURL: 'https://registry-api-qpfw.onrender.com/api/',
 	timeout: 10000,
 	headers: {
 		'Content-Type': 'application/json'
