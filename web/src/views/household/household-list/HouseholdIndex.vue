@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
-import {useBarangayStore} from '@/stores/barangay'
-import axiosInstance from '@/axiosInstance'
+import {useBarangayStore} from '@/stores/barangay.ts'
+import axiosInstance from '@/axiosInstance.ts'
 import NewHouseholdDialog from './dialogs/NewHouseholdDialog.vue'
 import ViewHouseholdDialog from './dialogs/ViewHouseholdDialog.vue'
 import UpdateHouseholdDialog from './dialogs/UpdateHouseholdDialog.vue'

@@ -1,26 +1,31 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-import {useRouter} from 'vue-router'
-import axiosInstance from '@/axiosInstance'
+import axiosInstance from '@/axiosInstance.ts'
 
+// Props
 interface Props {
 	visible: boolean
 	householdId: number | null
-	householdCode: string | null
+	householdName: string
+	householdCode: string
 }
 
 const props = defineProps<Props>()
-const router = useRouter()
 
 // Emits
 const emit = defineEmits<{
 	(e: 'update:visible', value: boolean): void
+	(e: 'success'): void
 }>()
 
 // State
 const household = ref<any>(null)
 const isLoading = ref(false)
+const fetchError = ref<string | null>(null)
+const isDeleting = ref(false)
 const error = ref<string | null>(null)
+const confirmationCode = ref('')
+const showConfirmationError = ref(false)
 
 // Computed dialog visibility
 const dialogVisible = computed({
@@ -28,84 +33,61 @@ const dialogVisible = computed({
 	set: (value) => emit('update:visible', value)
 })
 
-// Household type options for display
-const householdTypeOptions = [
-	{value: 'NUCLEAR', label: 'Nuclear'},
-	{value: 'EXTENDED', label: 'Extended'},
-	{value: 'JOINT', label: 'Joint'},
-	{value: 'SINGLE_PARENT', label: 'Single Parent'}
-]
+// Check if confirmation code matches
+const isConfirmationValid = computed(() => {
+	return confirmationCode.value === props.householdCode
+})
 
-// Housing ownership options for display
-const housingOwnershipOptions = [
-	{value: 'OWNED', label: 'Owned'},
-	{value: 'RENTED', label: 'Rented'},
-	{value: 'LEASED', label: 'Leased'},
-	{value: 'SHARED', label: 'Shared'},
-	{value: 'OTHER', label: 'Other'}
-]
-
-// Get label from value
-const getLabel = (value: string, options: Array<{ value: string, label: string }>) => {
-	const option = options.find(opt => opt.value === value)
-	return option ? option.label : value
-}
-
-// Get status badge color
-const getStatusBadgeClass = (status: string) => {
-	const statusMap: Record<string, string> = {
-		'APPROVED': 'bg-green-100 text-green-700',
-		'PENDING': 'bg-yellow-100 text-yellow-700',
-		'REJECTED': 'bg-red-100 text-red-700',
-		'DRAFT': 'bg-gray-100 text-gray-700'
-	}
-	return statusMap[status] || 'bg-gray-100 text-gray-700'
-}
-
-// Format value for display (uppercase for codes, natural for names)
-const formatDisplayValue = (value: string | null | undefined, field: string) => {
-	if (!value) return '—'
-
-	// Uppercase for codes and statuses
-	const uppercaseFields = ['code', 'barangay', 'city', 'province']
-	if (uppercaseFields.includes(field)) {
-		return value.toUpperCase()
-	}
-
-	// Natural case for names
-	return value
-}
-
-// Fetch household details
+// Fetch household data
 const fetchHousehold = async () => {
 	if (!props.householdId) return
 
 	isLoading.value = true
-	error.value = null
+	fetchError.value = null
 	try {
 		const response = await axiosInstance.get(`family/${props.householdCode}/`)
 		household.value = response.data
 	} catch (err) {
-		error.value = 'Failed to load household details. Please try again.'
+		fetchError.value = 'Failed to load household details. Please try again.'
 		console.error('Error fetching household:', err)
 	} finally {
 		isLoading.value = false
 	}
 }
 
-// Navigate to household members
-const goToHouseholdMembers = () => {
-	if (props.householdId) {
+// Delete handler
+const handleDelete = async () => {
+	if (!isConfirmationValid.value) {
+		showConfirmationError.value = true
+		return
+	}
+
+	if (!props.householdId) return
+
+	isDeleting.value = true
+	error.value = null
+	showConfirmationError.value = false
+
+	try {
+		await axiosInstance.delete(`family/${props.householdId}/`)
+		emit('success')
 		dialogVisible.value = false
-		router.push(`/households/${props.householdId}/members`)
+	} catch (err: any) {
+		error.value = err.response?.data?.message || 'Failed to delete household. Please try again.'
+		console.error('Error deleting household:', err)
+	} finally {
+		isDeleting.value = false
 	}
 }
 
-// Close dialog handler
+// Close handler
 const handleClose = () => {
 	dialogVisible.value = false
-	household.value = null
 	error.value = null
+	fetchError.value = null
+	confirmationCode.value = ''
+	showConfirmationError.value = false
+	household.value = null
 }
 
 // Watch for dialog open to fetch data
@@ -114,7 +96,10 @@ watch(() => props.visible, (newVal) => {
 		fetchHousehold()
 	} else if (!newVal) {
 		household.value = null
+		fetchError.value = null
 		error.value = null
+		confirmationCode.value = ''
+		showConfirmationError.value = false
 	}
 })
 
@@ -127,6 +112,7 @@ watch(() => props.householdId, (newVal) => {
 </script>
 
 <template>
+	<!-- Dialog Overlay -->
 	<div
 			v-if="dialogVisible"
 			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
@@ -136,15 +122,7 @@ watch(() => props.householdId, (newVal) => {
 		<div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
 			<!-- Header -->
 			<div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-				<div class="flex items-center gap-3">
-					<h3 class="text-xl font-bold text-gray-800">Household Details</h3>
-					<span
-							v-if="household?.registrationStatus"
-							class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium uppercase"
-							:class="getStatusBadgeClass(household.registrationStatus)">
-            {{ household.registrationStatus }}
-          </span>
-				</div>
+				<h3 class="text-xl font-bold text-gray-800">Delete Household</h3>
 				<button
 						@click="handleClose"
 						class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700">
@@ -163,25 +141,41 @@ watch(() => props.householdId, (newVal) => {
 				</div>
 
 				<!-- Error State -->
-				<div v-else-if="error"
-				     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+				<div v-else-if="fetchError"
+				     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
 					<i class="bx bx-error-circle text-xl"></i>
-					{{ error }}
+					{{ fetchError }}
 				</div>
 
 				<!-- Content -->
-				<div v-else-if="household" class="space-y-6">
-					<!-- Basic Information Section -->
-					<div>
+				<template v-else-if="household">
+					<!-- Delete Error Alert -->
+					<div v-if="error"
+					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
+						<i class="bx bx-error-circle text-xl"></i>
+						{{ error }}
+					</div>
+
+					<!-- Warning Message -->
+					<div class="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+						<i class="bx bx-error text-xl text-amber-600 mt-0.5"></i>
+						<div class="text-sm text-amber-800">
+							<p class="font-medium mb-1">Warning: This action cannot be undone!</p>
+							<p>Deleting this household will permanently remove all associated data from the system.</p>
+						</div>
+					</div>
+
+					<!-- Household Information Section -->
+					<div class="mb-6">
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
 							<i class="bx bx-info-circle mr-1"></i>
-							Basic Information
+							Household Information
 						</h4>
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Family Code</label>
 								<input
-										:value="formatDisplayValue(household.code, 'code')"
+										:value="household.code || '—'"
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono uppercase cursor-default"
 										readonly
@@ -201,7 +195,7 @@ watch(() => props.householdId, (newVal) => {
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Block Number</label>
 								<input
-										:value="formatDisplayValue(household.blockNumber, 'code')"
+										:value="household.blockNumber || '—'"
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
@@ -221,8 +215,8 @@ watch(() => props.householdId, (newVal) => {
 						</div>
 					</div>
 
-					<!-- Address Section -->
-					<div>
+					<!-- Address Information Section -->
+					<div class="mb-6">
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
 							<i class="bx bx-map mr-1"></i>
 							Address Information
@@ -231,7 +225,7 @@ watch(() => props.householdId, (newVal) => {
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Barangay</label>
 								<input
-										:value="formatDisplayValue(household.barangay, 'barangay')"
+										:value="household.barangay || '—'"
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
@@ -241,7 +235,7 @@ watch(() => props.householdId, (newVal) => {
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">City</label>
 								<input
-										:value="formatDisplayValue(household.city, 'city')"
+										:value="household.city || '—'"
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
@@ -251,7 +245,7 @@ watch(() => props.householdId, (newVal) => {
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
 								<input
-										:value="formatDisplayValue(household.province, 'province')"
+										:value="household.province || '—'"
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
@@ -261,77 +255,59 @@ watch(() => props.householdId, (newVal) => {
 						</div>
 					</div>
 
-					<!-- Additional Information -->
+					<!-- Confirmation Section -->
 					<div>
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-							<i class="bx bx-detail mr-1"></i>
-							Additional Information
+							<i class="bx bx-shield mr-1"></i>
+							Confirmation Required
 						</h4>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Landline Number</label>
+						<div class="bg-gray-50 rounded-lg p-4">
+							<p class="text-sm text-gray-600 mb-3">
+								To confirm deletion, please type the family code
+								<span class="font-mono font-bold text-gray-800">{{ household.code }}</span>
+								in the field below.
+							</p>
+							<div class="relative">
 								<input
-										:value="household.landline || '—'"
+										v-model="confirmationCode"
 										type="text"
-										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
-										readonly
-										disabled
+										placeholder="Type the family code to confirm"
+										class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-colors"
+										:class="showConfirmationError && !isConfirmationValid ? 'border-red-500' : 'border-gray-300'"
+										@input="showConfirmationError = false"
 								>
+								<i v-if="isConfirmationValid"
+								   class="bx bx-check-circle absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-lg"></i>
+								<i v-else-if="confirmationCode && !isConfirmationValid"
+								   class="bx bx-x-circle absolute right-3 top-1/2 -translate-y-1/2 text-red-500 text-lg"></i>
 							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Household Type</label>
-								<input
-										:value="getLabel(household.householdType, householdTypeOptions)"
-										type="text"
-										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
-										readonly
-										disabled
-								>
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Housing Ownership</label>
-								<input
-										:value="getLabel(household.housingOwnership, housingOwnershipOptions)"
-										type="text"
-										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
-										readonly
-										disabled
-								>
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Member Count</label>
-								<input
-										:value="household.memberCount || 0"
-										type="text"
-										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
-										readonly
-										disabled
-								>
-							</div>
+							<p v-if="showConfirmationError && !isConfirmationValid" class="mt-1 text-xs text-red-500">
+								<i class="bx bx-error-circle mr-1"></i>
+								Please enter the correct family code to confirm deletion
+							</p>
+							<p v-else-if="isConfirmationValid" class="mt-1 text-xs text-green-600">
+								<i class="bx bx-check-circle mr-1"></i>
+								Code verified. You can proceed with deletion.
+							</p>
 						</div>
 					</div>
-
-					<!-- Deleted Status -->
-					<div v-if="household.deleted"
-					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-						<i class="bx bx-trash text-xl"></i>
-						This household has been deleted
-					</div>
-				</div>
+				</template>
 			</div>
 
 			<!-- Footer -->
-			<div class="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-				<button
-						@click="goToHouseholdMembers"
-						class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm hover:shadow-md">
-					<i class="bx bx-group text-lg"></i>
-					Manage Household Members
-				</button>
+			<div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
 				<button
 						@click="handleClose"
-						class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-					Close
+						:disabled="isDeleting"
+						class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50">
+					Cancel
+				</button>
+				<button
+						@click="handleDelete"
+						:disabled="isDeleting || !isConfirmationValid || isLoading"
+						class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+					<i v-if="isDeleting" class="bx bx-loader-alt animate-spin"></i>
+					{{ isDeleting ? 'Deleting...' : 'Delete Household' }}
 				</button>
 			</div>
 		</div>
@@ -366,11 +342,5 @@ watch(() => props.householdId, (newVal) => {
 		transform: translateY(0) scale(1);
 		opacity: 1;
 	}
-}
-
-/* Remove default input styling for disabled inputs */
-input:disabled {
-	-webkit-text-fill-color: #374151;
-	opacity: 1;
 }
 </style>

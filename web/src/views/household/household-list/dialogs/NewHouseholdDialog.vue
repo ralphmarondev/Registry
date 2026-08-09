@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, onMounted, ref, watch} from 'vue'
-import {useBarangayStore} from '@/stores/barangay'
-import axiosInstance from '@/axiosInstance'
+import {useBarangayStore} from '@/stores/barangay.ts'
+import axiosInstance from '@/axiosInstance.ts'
 
 interface Props {
 	visible: boolean
