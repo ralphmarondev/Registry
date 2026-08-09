@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-import {useRouter} from 'vue-router'
 import axiosInstance from '@/axiosInstance.ts'
 
 interface Props {
@@ -10,7 +9,6 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const router = useRouter()
 
 // Emits
 const emit = defineEmits<{
@@ -90,14 +88,6 @@ const fetchHousehold = async () => {
 		console.error('Error fetching household:', err)
 	} finally {
 		isLoading.value = false
-	}
-}
-
-// Navigate to household members
-const goToHouseholdMembers = () => {
-	if (props.householdId) {
-		dialogVisible.value = false
-		router.push(`/households/${props.householdId}/members`)
 	}
 }
 
@@ -322,12 +312,13 @@ watch(() => props.householdId, (newVal) => {
 
 			<!-- Footer -->
 			<div class="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-				<button
-						@click="goToHouseholdMembers"
-						class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm hover:shadow-md">
+				<router-link
+						:to="{ name: 'household-details', params: { code: householdCode } }"
+						class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm hover:shadow-md"
+						@click="handleClose">
 					<i class="bx bx-group text-lg"></i>
 					Manage Household Members
-				</button>
+				</router-link>
 				<button
 						@click="handleClose"
 						class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">

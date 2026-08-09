@@ -29,6 +29,12 @@ const router = createRouter({
 			component: () => import('@/views/household/household-list/HouseholdIndex.vue')
 		},
 		{
+			path: '/households/:code',
+			name: 'household-details',
+			meta: {requiresAuth: true, title: 'Household Details'},
+			component: () => import('@/views/household/household-detail/HouseholdDetailIndex.vue')
+		},
+		{
 			path: '/residents',
 			name: 'residents',
 			meta: {requiresAuth: true, title: 'Residents'},
