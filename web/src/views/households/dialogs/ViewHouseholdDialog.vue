@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useBarangayStore } from '@/stores/barangay'
+import {computed, ref, watch} from 'vue'
+import {useRouter} from 'vue-router'
 import axiosInstance from '@/axiosInstance'
 
-// Props
 interface Props {
 	visible: boolean
 	householdId: number | null
@@ -11,13 +10,12 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const router = useRouter()
 
 // Emits
 const emit = defineEmits<{
 	(e: 'update:visible', value: boolean): void
 }>()
-
-const barangayStore = useBarangayStore()
 
 // State
 const household = ref<any>(null)
@@ -32,25 +30,19 @@ const dialogVisible = computed({
 
 // Household type options for display
 const householdTypeOptions = [
-	{ value: 'NUCLEAR', label: 'Nuclear' },
-	{ value: 'EXTENDED', label: 'Extended' },
-	{ value: 'JOINT', label: 'Joint' },
-	{ value: 'SINGLE_PARENT', label: 'Single Parent' }
+	{value: 'NUCLEAR', label: 'Nuclear'},
+	{value: 'EXTENDED', label: 'Extended'},
+	{value: 'JOINT', label: 'Joint'},
+	{value: 'SINGLE_PARENT', label: 'Single Parent'}
 ]
 
 // Housing ownership options for display
 const housingOwnershipOptions = [
-	{ value: 'OWNED', label: 'Owned' },
-	{ value: 'RENTED', label: 'Rented' },
-	{ value: 'LEASED', label: 'Leased' },
-	{ value: 'SHARED', label: 'Shared' }
-]
-
-// Registration status options for display
-const registrationStatusOptions = [
-	{ value: 'APPROVED', label: 'Approved' },
-	{ value: 'PENDING', label: 'Pending' },
-	{ value: 'REJECTED', label: 'Rejected' }
+	{value: 'OWNED', label: 'Owned'},
+	{value: 'RENTED', label: 'Rented'},
+	{value: 'LEASED', label: 'Leased'},
+	{value: 'SHARED', label: 'Shared'},
+	{value: 'OTHER', label: 'Other'}
 ]
 
 // Get label from value
@@ -64,22 +56,24 @@ const getStatusBadgeClass = (status: string) => {
 	const statusMap: Record<string, string> = {
 		'APPROVED': 'bg-green-100 text-green-700',
 		'PENDING': 'bg-yellow-100 text-yellow-700',
-		'REJECTED': 'bg-red-100 text-red-700'
+		'REJECTED': 'bg-red-100 text-red-700',
+		'DRAFT': 'bg-gray-100 text-gray-700'
 	}
 	return statusMap[status] || 'bg-gray-100 text-gray-700'
 }
 
-// Format date
-const formatDate = (dateString: string) => {
-	if (!dateString) return '—'
-	const date = new Date(dateString)
-	return date.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit'
-	})
+// Format value for display (uppercase for codes, natural for names)
+const formatDisplayValue = (value: string | null | undefined, field: string) => {
+	if (!value) return '—'
+
+	// Uppercase for codes and statuses
+	const uppercaseFields = ['code', 'barangay', 'city', 'province']
+	if (uppercaseFields.includes(field)) {
+		return value.toUpperCase()
+	}
+
+	// Natural case for names
+	return value
 }
 
 // Fetch household details
@@ -96,6 +90,14 @@ const fetchHousehold = async () => {
 		console.error('Error fetching household:', err)
 	} finally {
 		isLoading.value = false
+	}
+}
+
+// Navigate to household members
+const goToHouseholdMembers = () => {
+	if (props.householdId) {
+		dialogVisible.value = false
+		router.push(`/households/${props.householdId}/members`)
 	}
 }
 
@@ -125,7 +127,6 @@ watch(() => props.householdId, (newVal) => {
 </script>
 
 <template>
-	<!-- Dialog Overlay -->
 	<div
 			v-if="dialogVisible"
 			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
@@ -139,7 +140,7 @@ watch(() => props.householdId, (newVal) => {
 					<h3 class="text-xl font-bold text-gray-800">Household Details</h3>
 					<span
 							v-if="household?.registrationStatus"
-							class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium"
+							class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium uppercase"
 							:class="getStatusBadgeClass(household.registrationStatus)">
             {{ household.registrationStatus }}
           </span>
@@ -162,7 +163,8 @@ watch(() => props.householdId, (newVal) => {
 				</div>
 
 				<!-- Error State -->
-				<div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+				<div v-else-if="error"
+				     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 					<i class="bx bx-error-circle text-xl"></i>
 					{{ error }}
 				</div>
@@ -175,30 +177,46 @@ watch(() => props.householdId, (newVal) => {
 							<i class="bx bx-info-circle mr-1"></i>
 							Basic Information
 						</h4>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 rounded-lg p-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Family Code</label>
-								<p class="text-sm font-mono bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.code || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Family Code</label>
+								<input
+										:value="formatDisplayValue(household.code, 'code')"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono uppercase cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Family Name</label>
-								<p class="text-sm font-medium bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.name || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Family Name</label>
+								<input
+										:value="household.name || '—'"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Block Number</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.blockNumber || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Block Number</label>
+								<input
+										:value="formatDisplayValue(household.blockNumber, 'code')"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Household Number</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.householdNumber || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Household Number</label>
+								<input
+										:value="household.householdNumber || '—'"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 						</div>
 					</div>
@@ -209,86 +227,93 @@ watch(() => props.householdId, (newVal) => {
 							<i class="bx bx-map mr-1"></i>
 							Address Information
 						</h4>
-						<div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 rounded-lg p-4">
+						<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Barangay</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.barangay || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Barangay</label>
+								<input
+										:value="formatDisplayValue(household.barangay, 'barangay')"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">City</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.city || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+								<input
+										:value="formatDisplayValue(household.city, 'city')"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Province</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.province || '—' }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+								<input
+										:value="formatDisplayValue(household.province, 'province')"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 						</div>
 					</div>
 
-					<!-- Contact & Other Information -->
+					<!-- Additional Information -->
 					<div>
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
 							<i class="bx bx-detail mr-1"></i>
 							Additional Information
 						</h4>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 rounded-lg p-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Landline Number</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.landline || '—' }}
-								</p>
-							</div>
-							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Household Type</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ getLabel(household.householdType, householdTypeOptions) }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Landline Number</label>
+								<input
+										:value="household.landline || '—'"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Housing Ownership</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ getLabel(household.housingOwnership, housingOwnershipOptions) }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Household Type</label>
+								<input
+										:value="getLabel(household.householdType, householdTypeOptions)"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">Member Count</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ household.memberCount || 0 }}
-								</p>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Housing Ownership</label>
+								<input
+										:value="getLabel(household.housingOwnership, housingOwnershipOptions)"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
+										readonly
+										disabled
+								>
 							</div>
-						</div>
-					</div>
-
-					<!-- Timestamps -->
-					<div v-if="household.createDate || household.updateDate">
-						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-							<i class="bx bx-time mr-1"></i>
-							System Information
-						</h4>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 rounded-lg p-4">
-							<div v-if="household.createDate">
-								<label class="block text-xs font-medium text-gray-500 mb-1">Created Date</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ formatDate(household.createDate) }}
-								</p>
-							</div>
-							<div v-if="household.updateDate">
-								<label class="block text-xs font-medium text-gray-500 mb-1">Last Updated</label>
-								<p class="text-sm bg-white px-3 py-2 rounded border border-gray-200">
-									{{ formatDate(household.updateDate) }}
-								</p>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Member Count</label>
+								<input
+										:value="household.memberCount || 0"
+										type="text"
+										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
+										readonly
+										disabled
+								>
 							</div>
 						</div>
 					</div>
 
 					<!-- Deleted Status -->
-					<div v-if="household.deleted" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+					<div v-if="household.deleted"
+					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 						<i class="bx bx-trash text-xl"></i>
 						This household has been deleted
 					</div>
@@ -296,7 +321,13 @@ watch(() => props.householdId, (newVal) => {
 			</div>
 
 			<!-- Footer -->
-			<div class="flex items-center justify-end px-6 py-4 border-t border-gray-200">
+			<div class="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+				<button
+						@click="goToHouseholdMembers"
+						class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm hover:shadow-md">
+					<i class="bx bx-group text-lg"></i>
+					Manage Household Members
+				</button>
 				<button
 						@click="handleClose"
 						class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
@@ -335,5 +366,11 @@ watch(() => props.householdId, (newVal) => {
 		transform: translateY(0) scale(1);
 		opacity: 1;
 	}
+}
+
+/* Remove default input styling for disabled inputs */
+input:disabled {
+	-webkit-text-fill-color: #374151;
+	opacity: 1;
 }
 </style>
