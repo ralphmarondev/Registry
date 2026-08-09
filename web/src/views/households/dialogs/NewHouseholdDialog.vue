@@ -411,16 +411,17 @@ onMounted(() => {
 
 <template>
 	<div v-if="dialogVisible"
-	     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+	     class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
 	     @click.self="handleClose">
-		<div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex overflow-hidden">
-			<div class="w-64 bg-emerald-50/50 border-r border-emerald-100 p-6 flex flex-col flex-shrink-0">
+		<div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden">
+
+			<!-- Sidebar Stepper - Desktop -->
+			<div class="hidden md:flex w-64 bg-emerald-50/50 border-r border-emerald-100 p-6 flex-col flex-shrink-0 overflow-y-auto">
 				<div class="mb-6">
 					<h3 class="text-lg font-bold text-gray-800">New Household</h3>
 					<p class="text-sm text-gray-500">Complete all steps</p>
 				</div>
 
-				<!-- Steps -->
 				<nav class="flex-1 space-y-2">
 					<div
 							v-for="step in steps"
@@ -432,8 +433,6 @@ onMounted(() => {
                 'opacity-50': getStepStatus(step.id) === 'pending'
               }"
 							@click="goToStep(step.id)">
-
-						<!-- Step Icon/Number -->
 						<div
 								class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0 transition-all duration-200"
 								:class="{
@@ -444,8 +443,6 @@ onMounted(() => {
 							<i v-if="getStepStatus(step.id) === 'completed'" class="bx bx-check text-lg"></i>
 							<span v-else>{{ step.id }}</span>
 						</div>
-
-						<!-- Step Info -->
 						<div class="flex-1 min-w-0">
 							<div class="flex items-center gap-2">
 								<p class="text-sm font-medium truncate" :class="{
@@ -468,7 +465,6 @@ onMounted(() => {
 					</div>
 				</nav>
 
-				<!-- Progress Indicator -->
 				<div class="mt-4 pt-4 border-t border-emerald-100">
 					<div class="flex items-center justify-between text-sm">
 						<span class="text-gray-500">Progress</span>
@@ -483,10 +479,47 @@ onMounted(() => {
 				</div>
 			</div>
 
+			<!-- Horizontal Stepper - Mobile -->
+			<div class="md:hidden bg-emerald-50/50 border-b border-emerald-100 px-3 py-2 flex-shrink-0">
+				<div class="flex items-center justify-between mb-1">
+					<h3 class="text-sm font-bold text-gray-800">New Household</h3>
+					<span class="text-xs font-medium text-emerald-600">{{ currentStep }}/{{ totalSteps }}</span>
+				</div>
+				<div class="flex items-center gap-1">
+					<div
+							v-for="step in steps"
+							:key="step.id"
+							class="flex items-center flex-1"
+							:class="{ 'last:flex-none': step.id === steps.length }">
+						<div
+								class="flex items-center justify-center w-7 h-7 rounded-full text-xs font-medium transition-all duration-200 flex-shrink-0 cursor-pointer"
+								:class="{
+                  'bg-emerald-600 text-white ring-2 ring-emerald-100': getStepStatus(step.id) === 'active',
+                  'bg-emerald-100 text-emerald-600': getStepStatus(step.id) === 'completed',
+                  'bg-gray-200 text-gray-500': getStepStatus(step.id) === 'pending'
+                }"
+								@click="goToStep(step.id)">
+							<i v-if="getStepStatus(step.id) === 'completed'" class="bx bx-check text-sm"></i>
+							<span v-else>{{ step.id }}</span>
+						</div>
+						<div
+								v-if="step.id < steps.length"
+								class="flex-1 h-0.5 mx-1 transition-colors"
+								:class="step.id < currentStep ? 'bg-emerald-600' : 'bg-gray-200'">
+						</div>
+					</div>
+				</div>
+				<div class="mt-0.5 text-center">
+					<p class="text-[10px] text-gray-500">
+						{{ steps[currentStep - 1]!!.title }}
+					</p>
+				</div>
+			</div>
+
 			<!-- Main Content -->
-			<div class="flex-1 flex flex-col min-w-0">
-				<!-- Header -->
-				<div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+			<div class="flex-1 flex flex-col min-w-0 max-h-[90vh] md:max-h-none">
+				<!-- Header - Desktop -->
+				<div class="hidden md:flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
 					<div>
 						<h4 class="text-lg font-semibold text-gray-800">
 							{{ steps[currentStep - 1]!!.title }}
@@ -503,19 +536,33 @@ onMounted(() => {
 					</button>
 				</div>
 
-				<!-- Form Body -->
-				<div class="flex-1 overflow-y-auto px-6 py-4">
+				<!-- Header - Mobile (with X button) -->
+				<div class="md:hidden flex items-center justify-between px-3 py-2 border-b border-gray-200 flex-shrink-0">
+					<h4 class="text-sm font-semibold text-gray-800">
+						{{ steps[currentStep - 1]!!.title }}
+					</h4>
+					<button
+							@click="handleClose"
+							:disabled="isSubmitting"
+							class="p-1 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700 disabled:opacity-50">
+						<i class="bx bx-x text-xl"></i>
+					</button>
+				</div>
+
+				<!-- Form Body - SCROLLABLE -->
+				<div class="flex-1 overflow-y-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4">
 					<!-- Submit Error Alert -->
 					<div v-if="submitError"
-					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
-						<i class="bx bx-error-circle text-xl"></i>
+					     class="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center gap-2 mb-3 text-sm">
+						<i class="bx bx-error-circle text-lg"></i>
 						{{ submitError }}
 					</div>
 
-					<form @submit.prevent="handleSubmit" class="space-y-4">
+					<form @submit.prevent="handleSubmit" class="space-y-3 sm:space-y-4">
 						<!-- Step 1: Household Information -->
-						<div v-show="currentStep === 1" class="space-y-4">
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div v-show="currentStep === 1" class="space-y-3 sm:space-y-4">
+							<!-- SINGLE COLUMN on mobile, 2 columns on desktop -->
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 								<!-- Family Code (Read-only) -->
 								<div class="col-span-1">
 									<label class="block text-sm font-medium text-gray-700 mb-1">
@@ -525,7 +572,7 @@ onMounted(() => {
 										<input
 												v-model="householdForm.code"
 												type="text"
-												class="w-full px-3 py-2 border rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+												class="w-full px-3 py-2 text-sm border rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
 												readonly
 												disabled
 										>
@@ -546,7 +593,7 @@ onMounted(() => {
 											v-model="householdForm.name"
 											type="text"
 											placeholder="e.g., Eda"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.household.name ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.household.name" class="mt-1 text-xs text-red-500">{{ errors.household.name }}</p>
@@ -561,7 +608,7 @@ onMounted(() => {
 											v-model="householdForm.blockNumber"
 											type="text"
 											placeholder="e.g., 972A"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.household.blockNumber ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.household.blockNumber" class="mt-1 text-xs text-red-500">
@@ -577,7 +624,7 @@ onMounted(() => {
 											v-model="householdForm.householdNumber"
 											type="text"
 											placeholder="e.g., 3501"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.household.householdNumber ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.household.householdNumber" class="mt-1 text-xs text-red-500">
@@ -591,7 +638,7 @@ onMounted(() => {
 									</label>
 									<select
 											v-model="householdForm.barangay"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.household.barangay ? 'border-red-500' : 'border-gray-300'"
 									>
 										<option value="">Select Barangay</option>
@@ -616,7 +663,7 @@ onMounted(() => {
 											v-model="householdForm.landline"
 											type="text"
 											placeholder="e.g., 333-000-222"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 								</div>
 
@@ -629,7 +676,7 @@ onMounted(() => {
 											v-model="householdForm.city"
 											type="text"
 											placeholder="e.g., Gonzaga"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.household.city ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.household.city" class="mt-1 text-xs text-red-500">{{ errors.household.city }}</p>
@@ -644,7 +691,7 @@ onMounted(() => {
 											v-model="householdForm.province"
 											type="text"
 											placeholder="e.g., Cagayan"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.household.province ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.household.province" class="mt-1 text-xs text-red-500">{{
@@ -659,7 +706,7 @@ onMounted(() => {
 									</label>
 									<select
 											v-model="householdForm.householdType"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 										<option
 												v-for="option in householdTypeOptions"
@@ -677,7 +724,7 @@ onMounted(() => {
 									</label>
 									<select
 											v-model="householdForm.housingOwnership"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 										<option
 												v-for="option in housingOwnershipOptions"
@@ -689,13 +736,13 @@ onMounted(() => {
 								</div>
 
 								<!-- Registration Status -->
-								<div class="col-span-2">
+								<div class="col-span-1 md:col-span-2">
 									<label class="block text-sm font-medium text-gray-700 mb-1">
 										Registration Status
 									</label>
 									<select
 											v-model="householdForm.registrationStatus"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 										<option
 												v-for="option in registrationStatusOptions"
@@ -709,15 +756,16 @@ onMounted(() => {
 						</div>
 
 						<!-- Step 2: Family Head Details -->
-						<div v-show="currentStep === 2" class="space-y-4">
-							<div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-4">
-								<p class="text-sm text-emerald-800">
+						<div v-show="currentStep === 2" class="space-y-3 sm:space-y-4">
+							<div class="bg-emerald-50 border border-emerald-200 rounded-lg p-2 sm:p-3">
+								<p class="text-xs sm:text-sm text-emerald-800">
 									<i class="bx bx-info-circle mr-1"></i>
 									Please provide the details of the family head who will be the primary contact.
 								</p>
 							</div>
 
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<!-- SINGLE COLUMN on mobile, 2 columns on desktop -->
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 								<!-- First Name -->
 								<div class="col-span-1">
 									<label class="block text-sm font-medium text-gray-700 mb-1">
@@ -727,7 +775,7 @@ onMounted(() => {
 											v-model="headForm.firstName"
 											type="text"
 											placeholder="e.g., Ralph Maron"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.firstName ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.head.firstName" class="mt-1 text-xs text-red-500">{{ errors.head.firstName }}</p>
@@ -742,7 +790,7 @@ onMounted(() => {
 											v-model="headForm.middleName"
 											type="text"
 											placeholder="e.g., Avila"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 								</div>
 
@@ -755,7 +803,7 @@ onMounted(() => {
 											v-model="headForm.lastName"
 											type="text"
 											placeholder="e.g., Eda"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.lastName ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.head.lastName" class="mt-1 text-xs text-red-500">{{ errors.head.lastName }}</p>
@@ -774,7 +822,7 @@ onMounted(() => {
 											v-model="headForm.suffix"
 											type="text"
 											placeholder="e.g., Jr., Sr., III"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 								</div>
 
@@ -786,7 +834,7 @@ onMounted(() => {
 									<input
 											v-model="headForm.birthDate"
 											type="date"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.birthDate ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.head.birthDate" class="mt-1 text-xs text-red-500">{{ errors.head.birthDate }}</p>
@@ -799,7 +847,7 @@ onMounted(() => {
 									</label>
 									<select
 											v-model="headForm.gender"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.gender ? 'border-red-500' : 'border-gray-300'"
 									>
 										<option
@@ -819,7 +867,7 @@ onMounted(() => {
 									</label>
 									<select
 											v-model="headForm.civilStatus"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.civilStatus ? 'border-red-500' : 'border-gray-300'"
 									>
 										<option
@@ -841,11 +889,11 @@ onMounted(() => {
 											v-model="headForm.occupation"
 											type="text"
 											placeholder="e.g., Farmer"
-											class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 									>
 								</div>
 
-								<!-- Contact Number & Email (Side by side) -->
+								<!-- Contact Number & Email (Side by side on desktop, stacked on mobile) -->
 								<div class="col-span-1">
 									<label class="block text-sm font-medium text-gray-700 mb-1">
 										Contact Number <span class="text-red-500">*</span>
@@ -854,7 +902,7 @@ onMounted(() => {
 											v-model="headForm.contactNumber"
 											type="text"
 											placeholder="e.g., 09123456789"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.contactNumber ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.head.contactNumber" class="mt-1 text-xs text-red-500">{{
@@ -870,7 +918,7 @@ onMounted(() => {
 											v-model="headForm.email"
 											type="email"
 											placeholder="e.g., ralphmaron@example.com"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.head.email ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.head.email" class="mt-1 text-xs text-red-500">{{ errors.head.email }}</p>
@@ -879,17 +927,18 @@ onMounted(() => {
 						</div>
 
 						<!-- Step 3: Account Setup -->
-						<div v-show="currentStep === 3" class="space-y-4">
-							<div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-								<p class="text-sm text-amber-800">
+						<div v-show="currentStep === 3" class="space-y-3 sm:space-y-4">
+							<div class="bg-amber-50 border border-amber-200 rounded-lg p-2 sm:p-3">
+								<p class="text-xs sm:text-sm text-amber-800">
 									<i class="bx bx-shield-alt mr-1"></i>
 									Create login credentials for the family head to access the system.
 								</p>
 							</div>
 
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<!-- SINGLE COLUMN on mobile, 2 columns on desktop -->
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 								<!-- Username -->
-								<div class="col-span-2">
+								<div class="col-span-1 md:col-span-2">
 									<label class="block text-sm font-medium text-gray-700 mb-1">
 										Username <span class="text-red-500">*</span>
 									</label>
@@ -897,15 +946,10 @@ onMounted(() => {
 											v-model="accountForm.username"
 											type="text"
 											placeholder="e.g., ralphmaron"
-											class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+											class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 											:class="errors.account.username ? 'border-red-500' : 'border-gray-300'"
 									>
 									<p v-if="errors.account.username" class="mt-1 text-xs text-red-500">{{ errors.account.username }}</p>
-									<p v-else-if="accountForm.username && headForm.firstName && headForm.lastName"
-									   class="mt-1 text-xs text-gray-500">
-										<i class="bx bx-edit mr-1"></i>
-										You can edit this username
-									</p>
 								</div>
 
 								<!-- Password -->
@@ -918,7 +962,7 @@ onMounted(() => {
 												v-model="accountForm.password"
 												type="password"
 												placeholder="Min. 6 characters"
-												class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+												class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 												:class="errors.account.password ? 'border-red-500' : 'border-gray-300'"
 										>
 										<i class="bx bx-lock-alt absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -936,7 +980,7 @@ onMounted(() => {
 												v-model="accountForm.confirmPassword"
 												type="password"
 												placeholder="Confirm your password"
-												class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
+												class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
 												:class="errors.account.confirmPassword ? 'border-red-500' : 'border-gray-300'"
 										>
 										<i class="bx bx-check-shield absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -960,31 +1004,32 @@ onMounted(() => {
 					</form>
 				</div>
 
-				<!-- Footer -->
-				<div class="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+				<!-- Footer - with Next/Prev buttons always visible -->
+				<div class="flex items-center justify-between px-3 sm:px-4 md:px-6 py-3 sm:py-4 border-t border-gray-200 flex-shrink-0">
 					<button
 							v-if="currentStep > 1"
 							@click="goToPreviousStep"
 							:disabled="isSubmitting"
-							class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50">
-						<i class="bx bx-chevron-left mr-1"></i>
-						Back
+							class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1">
+						<i class="bx bx-chevron-left"></i>
+						<span class="hidden xs:inline">Back</span>
 					</button>
 					<div v-else></div>
 
-					<div class="flex items-center gap-3">
+					<div class="flex items-center gap-2 sm:gap-3">
+						<!-- Cancel button - HIDDEN on mobile (we have X at top) -->
 						<button
 								@click="handleClose"
 								:disabled="isSubmitting"
-								class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50">
+								class="hidden sm:inline-block px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50">
 							Cancel
 						</button>
 
 						<button
 								v-if="currentStep < totalSteps"
 								@click="goToNextStep"
-								class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors flex items-center gap-2">
-							Next
+								class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors flex items-center gap-1">
+							<span>Next</span>
 							<i class="bx bx-chevron-right"></i>
 						</button>
 
@@ -992,9 +1037,9 @@ onMounted(() => {
 								v-else
 								@click="handleSubmit"
 								:disabled="isSubmitting"
-								class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+								class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
 							<i v-if="isSubmitting" class="bx bx-loader-alt animate-spin"></i>
-							{{ isSubmitting ? 'Creating...' : 'Create Household' }}
+							<span>{{ isSubmitting ? 'Creating...' : 'Create' }}</span>
 						</button>
 					</div>
 				</div>
