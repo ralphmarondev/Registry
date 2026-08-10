@@ -2,9 +2,12 @@ package com.ralphmarondev.registry.service
 
 import com.ralphmarondev.registry.dto.FamilyRequest
 import com.ralphmarondev.registry.dto.FamilyResponse
+import com.ralphmarondev.registry.entity.Member
+import com.ralphmarondev.registry.enums.RelationshipToHead
 import com.ralphmarondev.registry.mapper.toFamily
 import com.ralphmarondev.registry.mapper.toResponse
 import com.ralphmarondev.registry.repository.FamilyRepository
+import com.ralphmarondev.registry.repository.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -12,7 +15,8 @@ import java.time.LocalDateTime
 @Service
 @Transactional
 class FamilyService(
-    private val familyRepository: FamilyRepository
+    private val familyRepository: FamilyRepository,
+    private val memberRepository: MemberRepository
 ) {
     fun getAll(): List<FamilyResponse> {
         return familyRepository.findAll()
@@ -35,7 +39,31 @@ class FamilyService(
             throw RuntimeException("Family code already exists.")
         }
         val family = request.toFamily()
-        return familyRepository.save(family).toResponse()
+        val savedFamily = familyRepository.save(family)
+        val familyHead = request.head
+            ?: throw IllegalStateException("Family head is not specified.")
+
+        val member = Member(
+            family = family.copy(id = savedFamily.id),
+            firstName = familyHead.firstName,
+            middleName = familyHead.middleName,
+            lastName = familyHead.lastName,
+            suffix = familyHead.suffix,
+            sex = familyHead.sex,
+            dateOfBirth = familyHead.dateOfBirth,
+            placeOfBirth = familyHead.placeOfBirth,
+            phoneNumber = familyHead.phoneNumber,
+            civilStatus = familyHead.civilStatus,
+            nationality = familyHead.nationality,
+            religion = familyHead.religion,
+            occupation = familyHead.occupation,
+            educationalAttainment = familyHead.educationalAttainment,
+            isHead = true,
+            relationshipToHead = RelationshipToHead.SELF,
+        )
+        val savedFamilyHead = memberRepository.save(member).toResponse()
+        val response = family.toResponse()
+        return response.copy(head = savedFamilyHead)
     }
 
     fun update(id: Long, request: FamilyRequest): FamilyResponse {

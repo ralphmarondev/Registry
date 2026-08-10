@@ -22,7 +22,13 @@ class FamilyController(
         return familyService.getAll()
     }
 
-    @GetMapping("{code}/")
+    @GetMapping("{id}/")
+    fun getById(@PathVariable id: Long): ResponseEntity<FamilyResponse> {
+        val family = familyService.getById(id)
+        return ResponseEntity.ok(family)
+    }
+
+    @GetMapping("code/{code}/")
     fun getByCode(@PathVariable code: String): ResponseEntity<FamilyResponse> {
         val family = familyService.getByCode(code)
             ?: return ResponseEntity.notFound().build()
