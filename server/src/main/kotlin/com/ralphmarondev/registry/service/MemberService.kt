@@ -24,8 +24,11 @@ class MemberService(
 ) {
     fun getAll(): List<MemberResponse> {
         return memberRepository.findAll()
-            .map { it.toResponse() }
             .filter { !it.isDeleted }
+            .map { member ->
+                val programs = getBeneficiaryPrograms(member.id)
+                member.toResponse().copy(beneficiaryPrograms = programs)
+            }
     }
 
     fun getById(id: Long): MemberResponse {
@@ -59,7 +62,7 @@ class MemberService(
             indigenousGroup = request.indigenousGroup
         )
         val savedMember = memberRepository.save(member)
-
+        val programs = mutableListOf<BeneficiaryProgramResponse>()
         request.beneficiaryPrograms.forEach { programId ->
             val program = beneficiaryProgramRepository.findById(programId)
                 .orElseThrow { RuntimeException("Beneficiary program not found.") }
@@ -69,9 +72,9 @@ class MemberService(
                     beneficiaryProgram = program
                 )
             )
+            programs.add(program.toResponse())
         }
-
-        return savedMember.toResponse()
+        return savedMember.toResponse().copy(beneficiaryPrograms = programs)
     }
 
     fun update(id: Long, request: MemberRequest): MemberResponse {
