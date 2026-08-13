@@ -17,7 +17,8 @@ data class FamilyRequest(
     val householdType: HouseholdType,
     val housingOwnership: HousingOwnership,
     val registrationStatus: RegistrationStatus = RegistrationStatus.PENDING,
-    val head: MemberRequest? = null
+    val head: MemberRequest? = null,
+    val account: RegisterRequest? = null
 )
 
 data class FamilyResponse(
@@ -34,6 +35,7 @@ data class FamilyResponse(
     val housingOwnership: HousingOwnership,
     val registrationStatus: RegistrationStatus = RegistrationStatus.PENDING,
     val head: MemberResponse? = null,
+    val account: AccountResponse? = null,
     val memberCount: Int = 0,
     val isDeleted: Boolean = false,
     val createDate: LocalDateTime,

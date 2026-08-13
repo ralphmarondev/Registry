@@ -13,6 +13,7 @@ class FamilyController(
 ) {
     @PostMapping
     fun create(@RequestBody request: FamilyRequest): ResponseEntity<FamilyResponse> {
+        println("Creating new family")
         val family = familyService.create(request)
         return ResponseEntity.status(201).body(family)
     }
