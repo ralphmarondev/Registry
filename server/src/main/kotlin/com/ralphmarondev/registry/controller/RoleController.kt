@@ -11,15 +11,38 @@ import org.springframework.web.bind.annotation.*
 class RoleController(
     private val roleService: RoleService
 ) {
+    @GetMapping
+    fun getAll(): List<RoleResponse> {
+        return roleService.getAll()
+    }
+
+    @GetMapping("{id}")
+    fun getById(@PathVariable("id") id: Long): ResponseEntity<RoleResponse> {
+        return ResponseEntity.ok(roleService.getById(id))
+    }
+
+    @GetMapping("name/{name}")
+    fun getByName(@PathVariable("name") name: String): ResponseEntity<RoleResponse> {
+        return ResponseEntity.ok(roleService.getByName(name))
+    }
+
     @PostMapping
     fun create(@RequestBody request: RoleRequest): ResponseEntity<RoleResponse> {
         val role = roleService.create(request)
         return ResponseEntity.status(201).body(role)
     }
 
-    @GetMapping
-    fun getAll(): List<RoleResponse> {
-        return roleService.getAll()
+    @PutMapping("{id}")
+    fun update(
+        @PathVariable("id") id: Long,
+        @RequestBody request: RoleRequest
+    ): ResponseEntity<RoleResponse> {
+        return ResponseEntity.ok(roleService.update(id, request))
+    }
+
+    @DeleteMapping("{id}")
+    fun delete(@PathVariable("id") id: Long): ResponseEntity<RoleResponse> {
+        return ResponseEntity.ok(roleService.delete(id))
     }
 
     @PostMapping("register/batch/")
