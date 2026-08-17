@@ -62,7 +62,7 @@ class FamilyService(
             request = familyHeadAccount.copy(memberId = headResponse.id)
         )
         println("Family account response: $accountResponse")
-        val memberCount = countFamilyMember(family.name)
+        val memberCount = countFamilyMember(savedFamily.id)
         val familyResponse = family.toResponse()
         val response = familyResponse.copy(
             head = headResponse,
@@ -154,8 +154,7 @@ class FamilyService(
         )
     }
 
-    private fun countFamilyMember(lastName: String): Int {
-        val members = memberRepository.findByLastName(lastName)
-        return members.count()
+    private fun countFamilyMember(familyId: Long): Int {
+        return memberRepository.countByFamilyId(familyId)
     }
 }

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MemberRepository : JpaRepository<Member, Long> {
     fun findByLastName(lastName: String): List<Member>
+    fun countByFamilyId(familyId: Long): Int
 }

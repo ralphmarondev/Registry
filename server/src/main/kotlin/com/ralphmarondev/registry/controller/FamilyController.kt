@@ -36,6 +36,12 @@ class FamilyController(
         return ResponseEntity.ok(family)
     }
 
+    @PutMapping("{id}/")
+    fun update(@PathVariable id: Long, @RequestBody request: FamilyRequest): ResponseEntity<FamilyResponse> {
+        val updated = familyService.update(id = id, request = request)
+        return ResponseEntity.ok(updated)
+    }
+
     @DeleteMapping("{id}/")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         familyService.delete(id)
