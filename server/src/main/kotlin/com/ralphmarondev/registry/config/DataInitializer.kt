@@ -18,7 +18,6 @@ class DataInitializer(
 
     @Transactional
     override fun run(vararg args: String) {
-        // Initialize roles if they don't exist
         if (roleRepository.count() == 0L) {
             println("Initializing default roles...")
             val roles = listOf(
@@ -30,24 +29,21 @@ class DataInitializer(
             println("Created: ${savedRoles.size} roles.")
         }
 
-        // Always check and create admin account if it doesn't exist
-        if (accountRepository.findByUsername("ralphmaron") == null) {
+        if (accountRepository.findByUsername("admin") == null) {
             println("Creating admin account...")
             val adminRole = roleRepository.findByName("Administrator")
                 ?: throw IllegalStateException("Administrator role not found.")
 
-            val password = passwordEncoder.encode("iscuteee")
+            val password = passwordEncoder.encode("adminnimda")
                 ?: throw IllegalStateException("Failed to encode password.")
 
             val adminAccount = Account(
-                username = "ralphmaron",
+                username = "admin",
                 password = password,
-                email = "ralphmaron@gmail.com",
-                role = adminRole,
-                member = null
+                role = adminRole
             )
             accountRepository.save(adminAccount)
-            println("Admin account created with username: ralphmaron")
+            println("Admin account created with username: admin")
         } else {
             println("Admin account already exists.")
         }
