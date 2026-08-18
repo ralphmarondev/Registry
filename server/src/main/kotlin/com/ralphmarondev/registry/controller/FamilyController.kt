@@ -3,6 +3,7 @@ package com.ralphmarondev.registry.controller
 import com.ralphmarondev.registry.dto.FamilyRequest
 import com.ralphmarondev.registry.dto.FamilyResponse
 import com.ralphmarondev.registry.service.FamilyService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -13,9 +14,8 @@ class FamilyController(
 ) {
     @PostMapping
     fun create(@RequestBody request: FamilyRequest): ResponseEntity<FamilyResponse> {
-        println("Creating new family")
         val family = familyService.create(request)
-        return ResponseEntity.status(201).body(family)
+        return ResponseEntity.status(HttpStatus.CREATED).body(family)
     }
 
     @GetMapping
@@ -32,7 +32,6 @@ class FamilyController(
     @GetMapping("code/{code}/")
     fun getByCode(@PathVariable code: String): ResponseEntity<FamilyResponse> {
         val family = familyService.getByCode(code)
-            ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(family)
     }
 
@@ -48,8 +47,8 @@ class FamilyController(
         return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("register/batch/")
+    @PostMapping("batch/")
     fun batch(@RequestBody requests: List<FamilyRequest>): ResponseEntity<List<FamilyResponse>> {
-        return ResponseEntity.status(201).body(familyService.batch(requests))
+        return ResponseEntity.status(HttpStatus.CREATED).body(familyService.batch(requests))
     }
 }

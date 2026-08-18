@@ -2,14 +2,19 @@ package com.ralphmarondev.registry.service
 
 import com.ralphmarondev.registry.dto.*
 import com.ralphmarondev.registry.entity.Account
+import com.ralphmarondev.registry.entity.Family
 import com.ralphmarondev.registry.entity.Member
 import com.ralphmarondev.registry.enums.RelationshipToHead
+import com.ralphmarondev.registry.exception.PasswordEncodingException
+import com.ralphmarondev.registry.exception.ResourceAlreadyExistsException
+import com.ralphmarondev.registry.exception.ResourceNotFoundException
 import com.ralphmarondev.registry.mapper.toFamily
 import com.ralphmarondev.registry.mapper.toResponse
 import com.ralphmarondev.registry.repository.AccountRepository
 import com.ralphmarondev.registry.repository.FamilyRepository
 import com.ralphmarondev.registry.repository.MemberRepository
 import com.ralphmarondev.registry.repository.RoleRepository
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -20,64 +25,72 @@ class FamilyService(
     private val familyRepository: FamilyRepository,
     private val memberRepository: MemberRepository,
     private val accountRepository: AccountRepository,
-    private val roleRepository: RoleRepository
+    private val roleRepository: RoleRepository,
+    private val passwordEncoder: PasswordEncoder
 ) {
     fun getAll(): List<FamilyResponse> {
         return familyRepository.findAll()
-            .map { it.toResponse() }
             .filter { !it.isDeleted }
+            .map { it.toResponse() }
     }
 
     fun getById(id: Long): FamilyResponse {
         return familyRepository.findById(id)
-            .orElseThrow { RuntimeException("Family not found.") }
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Family not found.") }
             .toResponse()
     }
 
-    fun getByCode(code: String): FamilyResponse? {
-        return familyRepository.findByCode(code)?.toResponse()
+    fun getByCode(code: String): FamilyResponse {
+        return familyRepository.findByCode(code)
+            ?.takeIf { !it.isDeleted }
+            ?.toResponse()
+            ?: throw ResourceNotFoundException("Family not found.")
     }
 
     fun create(request: FamilyRequest): FamilyResponse {
-        println("Family service... create($request)")
-        if (familyRepository.findByCode(request.code) != null) {
-            throw RuntimeException("Family code already exists.")
+        val existingFamily = familyRepository.findByCode(request.code)
+
+        if (existingFamily != null && !existingFamily.isDeleted) {
+            throw ResourceNotFoundException("Family not found.")
         }
-        println("Family Code not exists.")
         val familyHeadInformation = request.head
             ?: throw IllegalStateException("Family head information is not specified.")
-        println("Family head information exists.")
         val familyHeadAccount = request.account
             ?: throw IllegalStateException("Family head account is not specified.")
-        println("Family head account exists.")
-
-        val family = request.toFamily()
-        val savedFamily = familyRepository.save(family)
-        println("Family saved: $savedFamily.")
+        val family = familyRepository.save(request.toFamily())
         val headResponse = registerFamilyHeadInformation(
-            request = familyHeadInformation.copy(familyId = savedFamily.id)
+            family = family,
+            request = familyHeadInformation
         )
-        println("Family head response: $headResponse")
+
         val accountResponse = createFamilyHeadAccount(
-            request = familyHeadAccount.copy(memberId = headResponse.id)
+            member = memberRepository.findById(headResponse.id)
+                .orElseThrow { ResourceNotFoundException("Family head not found.") },
+            request = familyHeadAccount
         )
-        println("Family account response: $accountResponse")
-        val memberCount = countFamilyMember(savedFamily.id)
-        val familyResponse = family.toResponse()
-        val response = familyResponse.copy(
+        return family.toResponse().copy(
             head = headResponse,
             account = accountResponse,
-            memberCount = memberCount
+            memberCount = countFamilyMember(family.id)
         )
-        println("Family response: $response")
-        return response
     }
 
     fun update(id: Long, request: FamilyRequest): FamilyResponse {
-        val existing = familyRepository.findById(id)
+        val existingFamily = familyRepository.findById(id)
+            .filter { !it.isDeleted }
             .orElseThrow { RuntimeException("Family not found.") }
 
-        val updatedFamily = existing.copy(
+        val existingWithCode = familyRepository.findByCode(request.code)
+
+        if (existingFamily.code != request.code &&
+            existingWithCode != null &&
+            !existingWithCode.isDeleted
+        ) {
+            throw ResourceAlreadyExistsException("Family code '${request.code}' already exists.")
+        }
+
+        val updatedFamily = existingFamily.copy(
             code = request.code,
             name = request.name,
             blockNumber = request.blockNumber,
@@ -85,21 +98,26 @@ class FamilyService(
             city = request.city,
             province = request.province,
             landline = request.landline,
+            householdNumber = request.householdNumber,
+            householdType = request.householdType,
+            housingOwnership = request.housingOwnership,
+            registrationStatus = request.registrationStatus,
             updateDate = LocalDateTime.now()
         )
         return familyRepository.save(updatedFamily).toResponse()
     }
 
     fun delete(id: Long) {
-        val existing = familyRepository.findById(id)
+        val existingFamily = familyRepository.findById(id)
+            .filter { !it.isDeleted }
             .orElseThrow { RuntimeException("Family not found.") }
 
-        val deleted = existing.copy(
+        val deletedFamily = existingFamily.copy(
             isDeleted = true,
             updateDate = LocalDateTime.now()
         )
 
-        familyRepository.save(deleted)
+        familyRepository.save(deletedFamily)
     }
 
     fun batch(requests: List<FamilyRequest>): List<FamilyResponse> {
@@ -107,11 +125,9 @@ class FamilyService(
     }
 
     private fun registerFamilyHeadInformation(
+        family: Family,
         request: MemberRequest
     ): MemberResponse {
-        val family = familyRepository.findById(request.familyId)
-            .orElseThrow { RuntimeException("Family not found.") }
-
         val member = Member(
             family = family,
             firstName = request.firstName,
@@ -134,16 +150,25 @@ class FamilyService(
     }
 
     private fun createFamilyHeadAccount(
+        member: Member,
         request: RegisterRequest
     ): AccountResponse {
+        if (accountRepository.findByUsername(request.username) != null) {
+            throw ResourceAlreadyExistsException("Username already taken.")
+        }
+
         val role = roleRepository.findById(request.roleId)
-            .orElseThrow { IllegalStateException("Role not found.") }
+            .orElseThrow { ResourceNotFoundException("Role not found.") }
+
+        val password = passwordEncoder.encode(request.password)
+            ?: throw PasswordEncodingException("Failed to encode password.")
 
         val account = Account(
             username = request.username,
-            password = request.password,
+            password = password,
             email = request.email,
-            role = role
+            role = role,
+            member = member
         )
         val saved = accountRepository.save(account)
         return AccountResponse(
