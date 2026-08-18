@@ -4,6 +4,10 @@ import com.ralphmarondev.registry.config.CurrentUserProvider
 import com.ralphmarondev.registry.config.JwtService
 import com.ralphmarondev.registry.dto.*
 import com.ralphmarondev.registry.entity.Account
+import com.ralphmarondev.registry.exception.InvalidCredentialsException
+import com.ralphmarondev.registry.exception.PasswordEncodingException
+import com.ralphmarondev.registry.exception.ResourceAlreadyExistsException
+import com.ralphmarondev.registry.exception.ResourceNotFoundException
 import com.ralphmarondev.registry.mapper.toAccountResponse
 import com.ralphmarondev.registry.mapper.toRegisterResponse
 import com.ralphmarondev.registry.repository.AccountRepository
@@ -12,6 +16,7 @@ import com.ralphmarondev.registry.repository.RoleRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -25,19 +30,21 @@ class AccountService(
 ) {
     fun register(request: RegisterRequest): RegisterResponse {
         if (accountRepository.findByUsername(request.username) != null) {
-            throw IllegalArgumentException("Username already taken.")
+            throw ResourceAlreadyExistsException("Username already taken.")
         }
         val role = roleRepository.findById(request.roleId)
-            .orElseThrow { IllegalArgumentException("Role not found.") }
+            .orElseThrow { ResourceNotFoundException("Role with id ${request.roleId} not found.") }
 
         val member = request.memberId?.let {
             memberRepository.findById(it)
-                .orElseThrow { IllegalArgumentException("Member not found.") }
+                .orElseThrow { ResourceNotFoundException("Member not found.") }
         }
+        val password = passwordEncoder.encode(request.password)
+            ?: throw PasswordEncodingException("Failed to encode password.")
 
         val account = Account(
             username = request.username,
-            password = passwordEncoder.encode(request.password) ?: "",
+            password = password,
             email = request.email,
             role = role,
             member = member
@@ -48,10 +55,11 @@ class AccountService(
 
     fun login(request: LoginRequest): LoginResponse {
         val account = accountRepository.findByUsername(request.username)
-            ?: throw IllegalArgumentException("Invalid credentials")
+            ?.takeIf { !it.isDeleted }
+            ?: throw InvalidCredentialsException()
 
         if (!passwordEncoder.matches(request.password, account.password)) {
-            throw IllegalArgumentException("Invalid credentials")
+            throw InvalidCredentialsException()
         }
         val accessToken = jwtService.generateAccessToken(
             userId = account.id,
@@ -71,9 +79,49 @@ class AccountService(
     fun me(): AccountResponse {
         val accountId = currentUserProvider.getCurrentUserId()
         val account = accountRepository.findById(accountId)
-            .orElseThrow { IllegalArgumentException("Account not found.") }
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Account with id $accountId not found.") }
 
         return account.toAccountResponse()
+    }
+
+    fun update(id: Long, request: RegisterRequest): RegisterResponse {
+        val account = accountRepository.findById(id)
+            .orElseThrow { ResourceNotFoundException("Account with id $id not found.") }
+
+        if (account.username != request.username && accountRepository.findByUsername(request.username) != null) {
+            throw ResourceAlreadyExistsException("Username already taken.")
+        }
+        val role = roleRepository.findById(request.roleId)
+            .orElseThrow {
+                ResourceNotFoundException("Role with id ${request.roleId} not found.")
+            }
+        val member = request.memberId?.let {
+            memberRepository.findById(it)
+                .orElseThrow { ResourceNotFoundException("Member not found.") }
+        }
+        val password = passwordEncoder.encode(request.password)
+            ?: throw PasswordEncodingException("Failed to encode password.")
+
+        val updatedAccount = account.copy(
+            username = request.username,
+            password = password,
+            email = request.email,
+            role = role,
+            member = member,
+            updateDate = LocalDateTime.now()
+        )
+        return accountRepository.save(updatedAccount).toRegisterResponse()
+    }
+
+    fun delete(id: Long): RegisterResponse {
+        val account = accountRepository.findById(id)
+            .orElseThrow { ResourceNotFoundException("Account with id $id not found.") }
+        val deletedAccount = account.copy(
+            isDeleted = true,
+            updateDate = LocalDateTime.now()
+        )
+        return accountRepository.save(deletedAccount).toRegisterResponse()
     }
 
     fun batch(requests: List<RegisterRequest>): List<RegisterResponse> {
