@@ -3,6 +3,7 @@ package com.ralphmarondev.registry.controller
 import com.ralphmarondev.registry.dto.RoleRequest
 import com.ralphmarondev.registry.dto.RoleResponse
 import com.ralphmarondev.registry.service.RoleService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -16,12 +17,12 @@ class RoleController(
         return roleService.getAll()
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}/")
     fun getById(@PathVariable("id") id: Long): ResponseEntity<RoleResponse> {
         return ResponseEntity.ok(roleService.getById(id))
     }
 
-    @GetMapping("name/{name}")
+    @GetMapping("name/{name}/")
     fun getByName(@PathVariable("name") name: String): ResponseEntity<RoleResponse> {
         return ResponseEntity.ok(roleService.getByName(name))
     }
@@ -29,10 +30,10 @@ class RoleController(
     @PostMapping
     fun create(@RequestBody request: RoleRequest): ResponseEntity<RoleResponse> {
         val role = roleService.create(request)
-        return ResponseEntity.status(201).body(role)
+        return ResponseEntity.status(HttpStatus.CREATED).body(role)
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}/")
     fun update(
         @PathVariable("id") id: Long,
         @RequestBody request: RoleRequest
@@ -40,13 +41,13 @@ class RoleController(
         return ResponseEntity.ok(roleService.update(id, request))
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}/")
     fun delete(@PathVariable("id") id: Long): ResponseEntity<RoleResponse> {
         return ResponseEntity.ok(roleService.delete(id))
     }
 
-    @PostMapping("register/batch/")
+    @PostMapping("batch/")
     fun batch(@RequestBody requests: List<RoleRequest>): ResponseEntity<List<RoleResponse>> {
-        return ResponseEntity.status(201).body(roleService.batch(requests))
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleService.batch(requests))
     }
 }
