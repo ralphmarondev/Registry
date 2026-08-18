@@ -12,12 +12,13 @@ class JwtService {
     private val accessTokenExpirationMs: Long = 1000L * 60 * 60 // 1 hour
     private val refreshTokenExpirationMs: Long = 1000L * 60 * 60 * 24 * 7 // 7 days
 
-    fun generateAccessToken(userId: Long, username: String): String {
+    fun generateAccessToken(userId: Long, username: String, role: String): String {
         val now = Date()
         val expiry = Date(now.time + accessTokenExpirationMs)
         return Jwts.builder()
             .setSubject(userId.toString())
             .claim("username", username)
+            .claim("role", role)
             .setIssuedAt(now)
             .setExpiration(expiry)
             .signWith(key)
@@ -51,6 +52,15 @@ class JwtService {
             .parseClaimsJws(token)
             .body
             .get("username", String::class.java)
+    }
+
+    fun extractRole(token: String): String {
+        return Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .body
+            .get("role", String::class.java)
     }
 
     fun isTokenValid(token: String): Boolean {

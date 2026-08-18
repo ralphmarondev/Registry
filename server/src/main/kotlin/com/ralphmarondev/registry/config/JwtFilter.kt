@@ -24,13 +24,18 @@ class JwtFilter(
             val token = authHeader.substring(7)
             try {
                 val userId = jwtService.extractUserId(token)
+                val role = jwtService.extractRole(token)
+                val authorities = listOf(SimpleGrantedAuthority("ROLE_${role.uppercase()}"))
+
                 val authentication = UsernamePasswordAuthenticationToken(
-                    userId, null, listOf(SimpleGrantedAuthority("ROLE_USER"))
+                    userId, null, authorities
                 )
+
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             } catch (e: Exception) {
                 e.printStackTrace()
+                SecurityContextHolder.clearContext()
             }
         }
         filterChain.doFilter(request, response)

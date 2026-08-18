@@ -63,7 +63,8 @@ class AccountService(
         }
         val accessToken = jwtService.generateAccessToken(
             userId = account.id,
-            username = account.username
+            username = account.username,
+            role = account.role.name
         )
         val refreshToken = jwtService.generateRefreshToken(
             userId = account.id,
