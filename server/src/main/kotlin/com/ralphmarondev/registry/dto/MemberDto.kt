@@ -47,6 +47,6 @@ data class MemberResponse(
     val relationshipToHead: RelationshipToHead,
     val isIndigenous: Boolean,
     val indigenousGroup: String? = null,
-    val beneficiaryPrograms: List<BeneficiaryProgramResponse>,
+    val beneficiaryPrograms: List<ProgramResponse>,
     val isDeleted: Boolean
 )

@@ -4,19 +4,12 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "member_beneficiary")
-data class MemberBeneficiary(
+@Table(name = "programs")
+data class Program(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    val member: Member,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "beneficiary_id")
-    val beneficiaryProgram: BeneficiaryProgram,
-
+    val name: String,
+    val description: String,
     @Column(name = "is_deleted")
     val isDeleted: Boolean = false,
     @Column(name = "create_date")

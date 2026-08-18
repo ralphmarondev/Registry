@@ -2,12 +2,12 @@ package com.ralphmarondev.registry.dto
 
 import java.time.LocalDateTime
 
-data class BeneficiaryProgramRequest(
+data class ProgramRequest(
     val name: String,
     val description: String
 )
 
-data class BeneficiaryProgramResponse(
+data class ProgramResponse(
     val id: Long = 0,
     val name: String,
     val description: String,

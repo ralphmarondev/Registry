@@ -1,9 +1,9 @@
 package com.ralphmarondev.registry.mapper
 
-import com.ralphmarondev.registry.dto.BeneficiaryProgramResponse
-import com.ralphmarondev.registry.entity.BeneficiaryProgram
+import com.ralphmarondev.registry.dto.ProgramResponse
+import com.ralphmarondev.registry.entity.Program
 
-fun BeneficiaryProgram.toResponse() = BeneficiaryProgramResponse(
+fun Program.toResponse() = ProgramResponse(
     id = id,
     name = name,
     description = description,

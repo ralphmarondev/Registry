@@ -1,14 +1,14 @@
 package com.ralphmarondev.registry.service
 
-import com.ralphmarondev.registry.dto.BeneficiaryProgramResponse
+import com.ralphmarondev.registry.dto.ProgramResponse
 import com.ralphmarondev.registry.dto.MemberRequest
 import com.ralphmarondev.registry.dto.MemberResponse
 import com.ralphmarondev.registry.entity.Member
-import com.ralphmarondev.registry.entity.MemberBeneficiary
+import com.ralphmarondev.registry.entity.MemberProgram
 import com.ralphmarondev.registry.mapper.toResponse
-import com.ralphmarondev.registry.repository.BeneficiaryProgramRepository
+import com.ralphmarondev.registry.repository.ProgramRepository
 import com.ralphmarondev.registry.repository.FamilyRepository
-import com.ralphmarondev.registry.repository.MemberBeneficiaryRepository
+import com.ralphmarondev.registry.repository.MemberProgramsRepository
 import com.ralphmarondev.registry.repository.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,8 +19,8 @@ import java.time.LocalDateTime
 class MemberService(
     private val memberRepository: MemberRepository,
     private val familyRepository: FamilyRepository,
-    private val beneficiaryProgramRepository: BeneficiaryProgramRepository,
-    private val memberBeneficiaryRepository: MemberBeneficiaryRepository
+    private val beneficiaryProgramRepository: ProgramRepository,
+    private val memberBeneficiaryRepository: MemberProgramsRepository
 ) {
     fun getAll(): List<MemberResponse> {
         return memberRepository.findAll()
@@ -62,14 +62,14 @@ class MemberService(
             indigenousGroup = request.indigenousGroup
         )
         val savedMember = memberRepository.save(member)
-        val programs = mutableListOf<BeneficiaryProgramResponse>()
+        val programs = mutableListOf<ProgramResponse>()
         request.beneficiaryPrograms.forEach { programId ->
             val program = beneficiaryProgramRepository.findById(programId)
                 .orElseThrow { RuntimeException("Beneficiary program not found.") }
             memberBeneficiaryRepository.save(
-                MemberBeneficiary(
+                MemberProgram(
                     member = savedMember,
-                    beneficiaryProgram = program
+                    program = program
                 )
             )
             programs.add(program.toResponse())
@@ -111,7 +111,7 @@ class MemberService(
         request.beneficiaryPrograms.forEach { programId ->
             val program = beneficiaryProgramRepository.findById(programId)
                 .orElseThrow { RuntimeException("Beneficiary program not found.") }
-            memberBeneficiaryRepository.save(MemberBeneficiary(member = savedMember, beneficiaryProgram = program))
+            memberBeneficiaryRepository.save(MemberProgram(member = savedMember, program = program))
         }
 
         return savedMember.toResponse()
@@ -127,16 +127,16 @@ class MemberService(
         memberRepository.save(deleted)
     }
 
-    private fun getBeneficiaryPrograms(memberId: Long): List<BeneficiaryProgramResponse> {
+    private fun getBeneficiaryPrograms(memberId: Long): List<ProgramResponse> {
         return memberBeneficiaryRepository.findByMemberId(memberId)
             .filter { !it.isDeleted }
             .map {
-                BeneficiaryProgramResponse(
-                    id = it.beneficiaryProgram.id,
-                    name = it.beneficiaryProgram.name,
-                    description = it.beneficiaryProgram.description,
-                    createDate = it.beneficiaryProgram.createDate,
-                    updateDate = it.beneficiaryProgram.updateDate
+                ProgramResponse(
+                    id = it.program.id,
+                    name = it.program.name,
+                    description = it.program.description,
+                    createDate = it.program.createDate,
+                    updateDate = it.program.updateDate
                 )
             }
     }
