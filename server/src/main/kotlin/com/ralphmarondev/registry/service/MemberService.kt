@@ -73,7 +73,7 @@ class MemberService(
         val savedMember = memberRepository.save(member)
         val programs = addPrograms(
             member = savedMember,
-            programIds = request.beneficiaryPrograms
+            programIds = request.beneficiaryPrograms ?: emptyList()
         )
         return savedMember.toResponse().copy(beneficiaryPrograms = programs)
     }
@@ -113,7 +113,7 @@ class MemberService(
 
         val programs = addPrograms(
             member = savedMember,
-            programIds = request.beneficiaryPrograms
+            programIds = request.beneficiaryPrograms ?: emptyList()
         )
 
         return savedMember.toResponse().copy(beneficiaryPrograms = programs)
