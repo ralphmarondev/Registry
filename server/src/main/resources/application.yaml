@@ -16,13 +16,13 @@ spring:
       hibernate:
         format_sql: true
 
-logging:
-  level:
-    root: WARN
-    org.springframework: ERROR
-    org.hibernate: ERROR
-    com.zaxxer.hikari: ERROR
-    com.ralphmarondev.registry: INFO
+#logging:
+#  level:
+#    root: WARN
+#    org.springframework: ERROR
+#    org.hibernate: ERROR
+#    com.zaxxer.hikari: ERROR
+#    com.ralphmarondev.registry: INFO
 
 
 server:
