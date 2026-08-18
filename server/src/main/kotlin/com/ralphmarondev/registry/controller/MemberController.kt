@@ -3,6 +3,7 @@ package com.ralphmarondev.registry.controller
 import com.ralphmarondev.registry.dto.MemberRequest
 import com.ralphmarondev.registry.dto.MemberResponse
 import com.ralphmarondev.registry.service.MemberService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -14,12 +15,30 @@ class MemberController(
     @PostMapping
     fun create(@RequestBody request: MemberRequest): ResponseEntity<MemberResponse> {
         val member = memberService.create(request)
-        return ResponseEntity.status(201).body(member)
+        return ResponseEntity.status(HttpStatus.CREATED).body(member)
     }
 
     @GetMapping
     fun getAll(): List<MemberResponse> {
         return memberService.getAll()
+    }
+
+    @GetMapping("{id}/")
+    fun getById(@PathVariable id: Long): ResponseEntity<MemberResponse> {
+        return ResponseEntity.ok(memberService.getById(id))
+    }
+
+    @GetMapping("family/{familyId}/")
+    fun getByFamilyId(@PathVariable familyId: Long): List<MemberResponse> {
+        return memberService.getByFamilyId(familyId)
+    }
+
+    @PutMapping("{id}/")
+    fun update(
+        @PathVariable id: Long,
+        @RequestBody request: MemberRequest
+    ): ResponseEntity<MemberResponse> {
+        return ResponseEntity.ok(memberService.update(id, request))
     }
 
     @DeleteMapping("{id}/")
@@ -28,8 +47,8 @@ class MemberController(
         return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("register/batch/")
+    @PostMapping("batch/")
     fun batch(@RequestBody requests: List<MemberRequest>): ResponseEntity<List<MemberResponse>> {
-        return ResponseEntity.status(201).body(memberService.batch(requests))
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.batch(requests))
     }
 }

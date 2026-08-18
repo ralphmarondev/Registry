@@ -1,15 +1,16 @@
 package com.ralphmarondev.registry.service
 
-import com.ralphmarondev.registry.dto.ProgramResponse
 import com.ralphmarondev.registry.dto.MemberRequest
 import com.ralphmarondev.registry.dto.MemberResponse
+import com.ralphmarondev.registry.dto.ProgramResponse
 import com.ralphmarondev.registry.entity.Member
 import com.ralphmarondev.registry.entity.MemberProgram
+import com.ralphmarondev.registry.exception.ResourceNotFoundException
 import com.ralphmarondev.registry.mapper.toResponse
-import com.ralphmarondev.registry.repository.ProgramRepository
 import com.ralphmarondev.registry.repository.FamilyRepository
 import com.ralphmarondev.registry.repository.MemberProgramsRepository
 import com.ralphmarondev.registry.repository.MemberRepository
+import com.ralphmarondev.registry.repository.ProgramRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -19,27 +20,35 @@ import java.time.LocalDateTime
 class MemberService(
     private val memberRepository: MemberRepository,
     private val familyRepository: FamilyRepository,
-    private val beneficiaryProgramRepository: ProgramRepository,
-    private val memberBeneficiaryRepository: MemberProgramsRepository
+    private val programRepository: ProgramRepository,
+    private val memberProgramsRepository: MemberProgramsRepository
 ) {
     fun getAll(): List<MemberResponse> {
         return memberRepository.findAll()
             .filter { !it.isDeleted }
-            .map { member ->
-                val programs = getBeneficiaryPrograms(member.id)
-                member.toResponse().copy(beneficiaryPrograms = programs)
-            }
+            .map { toMemberResponse(it) }
     }
 
     fun getById(id: Long): MemberResponse {
-        return memberRepository.findById(id)
-            .orElseThrow { RuntimeException("Member not found.") }
-            .toResponse()
+        val member = memberRepository.findById(id)
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Member with id $id not found.") }
+        return toMemberResponse(member)
+    }
+
+    fun getByFamilyId(familyId: Long): List<MemberResponse> {
+        familyRepository.findById(familyId)
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Family not found.") }
+        return memberRepository.findByFamilyId(familyId)
+            .filter { !it.isDeleted }
+            .map { toMemberResponse(it) }
     }
 
     fun create(request: MemberRequest): MemberResponse {
         val family = familyRepository.findById(request.familyId)
-            .orElseThrow { RuntimeException("Family not found.") }
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Family not found.") }
 
         val member = Member(
             family = family,
@@ -62,27 +71,21 @@ class MemberService(
             indigenousGroup = request.indigenousGroup
         )
         val savedMember = memberRepository.save(member)
-        val programs = mutableListOf<ProgramResponse>()
-        request.beneficiaryPrograms.forEach { programId ->
-            val program = beneficiaryProgramRepository.findById(programId)
-                .orElseThrow { RuntimeException("Beneficiary program not found.") }
-            memberBeneficiaryRepository.save(
-                MemberProgram(
-                    member = savedMember,
-                    program = program
-                )
-            )
-            programs.add(program.toResponse())
-        }
+        val programs = addPrograms(
+            member = savedMember,
+            programIds = request.beneficiaryPrograms
+        )
         return savedMember.toResponse().copy(beneficiaryPrograms = programs)
     }
 
     fun update(id: Long, request: MemberRequest): MemberResponse {
         val existing = memberRepository.findById(id)
-            .orElseThrow { RuntimeException("Member not found.") }
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Member with id $id not found.") }
 
         val family = familyRepository.findById(request.familyId)
-            .orElseThrow { RuntimeException("Family not found.") }
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Family not found.") }
 
         val updated = existing.copy(
             family = family,
@@ -106,20 +109,20 @@ class MemberService(
             updateDate = LocalDateTime.now()
         )
         val savedMember = memberRepository.save(updated)
-        memberBeneficiaryRepository.deleteAllByMemberId(id)
+        memberProgramsRepository.deleteAllByMemberId(id)
 
-        request.beneficiaryPrograms.forEach { programId ->
-            val program = beneficiaryProgramRepository.findById(programId)
-                .orElseThrow { RuntimeException("Beneficiary program not found.") }
-            memberBeneficiaryRepository.save(MemberProgram(member = savedMember, program = program))
-        }
+        val programs = addPrograms(
+            member = savedMember,
+            programIds = request.beneficiaryPrograms
+        )
 
-        return savedMember.toResponse()
+        return savedMember.toResponse().copy(beneficiaryPrograms = programs)
     }
 
     fun delete(id: Long) {
         val existing = memberRepository.findById(id)
-            .orElseThrow { RuntimeException("Member not found.") }
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Member not found.") }
         val deleted = existing.copy(
             isDeleted = true,
             updateDate = LocalDateTime.now()
@@ -127,21 +130,42 @@ class MemberService(
         memberRepository.save(deleted)
     }
 
-    private fun getBeneficiaryPrograms(memberId: Long): List<ProgramResponse> {
-        return memberBeneficiaryRepository.findByMemberId(memberId)
-            .filter { !it.isDeleted }
-            .map {
-                ProgramResponse(
-                    id = it.program.id,
-                    name = it.program.name,
-                    description = it.program.description,
-                    createDate = it.program.createDate,
-                    updateDate = it.program.updateDate
-                )
-            }
-    }
-
     fun batch(requests: List<MemberRequest>): List<MemberResponse> {
         return requests.map { create(it) }
+    }
+
+    private fun addPrograms(
+        member: Member,
+        programIds: List<Long>
+    ): List<ProgramResponse> {
+        return programIds.map { programId ->
+            val program = programRepository.findById(programId)
+                .filter { !it.isDeleted }
+                .orElseThrow { ResourceNotFoundException("Program with id $programId not found.") }
+            memberProgramsRepository.save(
+                MemberProgram(
+                    member = member,
+                    program = program
+                )
+            )
+            program.toResponse()
+        }
+    }
+
+    private fun toMemberResponse(
+        member: Member
+    ): MemberResponse {
+        val programs = getPrograms(member.id)
+        return member.toResponse().copy(beneficiaryPrograms = programs)
+    }
+
+    private fun getPrograms(
+        memberId: Long
+    ): List<ProgramResponse> {
+        return memberProgramsRepository
+            .findByMemberId(memberId)
+            .filter { !it.isDeleted }
+            .filter { !it.program.isDeleted }
+            .map { it.program.toResponse() }
     }
 }
