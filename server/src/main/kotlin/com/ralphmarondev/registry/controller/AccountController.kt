@@ -23,9 +23,14 @@ class AccountController(
         return ResponseEntity.ok(response)
     }
 
-    @GetMapping("me/")
-    fun me(): ResponseEntity<AccountResponse> {
-        return ResponseEntity.ok(accountService.me())
+    @GetMapping
+    fun getAll(): ResponseEntity<List<AccountResponse>> {
+        return ResponseEntity.ok(accountService.getAll())
+    }
+
+    @GetMapping("{id}/")
+    fun getById(@PathVariable("id") id: Long): ResponseEntity<AccountResponse> {
+        return ResponseEntity.ok(accountService.getById(id))
     }
 
     @PutMapping("{id}/")

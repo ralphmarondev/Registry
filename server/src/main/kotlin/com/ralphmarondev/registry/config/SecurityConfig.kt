@@ -40,7 +40,8 @@ class SecurityConfig {
                 // Account endpoints
                 auth.requestMatchers("/account/register/").hasAnyRole(RoleConstants.ADMINISTRATOR, RoleConstants.STAFF)
                 auth.requestMatchers("/account/batch/").hasAnyRole(RoleConstants.ADMINISTRATOR, RoleConstants.STAFF)
-                auth.requestMatchers("/account/**").authenticated()
+                auth.requestMatchers(HttpMethod.GET, "/account/")
+                    .hasAnyRole(RoleConstants.ADMINISTRATOR, RoleConstants.STAFF)
 
                 auth.anyRequest().authenticated()
             }

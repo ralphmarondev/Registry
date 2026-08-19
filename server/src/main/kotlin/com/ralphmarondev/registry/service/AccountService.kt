@@ -13,6 +13,7 @@ import com.ralphmarondev.registry.mapper.toRegisterResponse
 import com.ralphmarondev.registry.repository.AccountRepository
 import com.ralphmarondev.registry.repository.MemberRepository
 import com.ralphmarondev.registry.repository.RoleRepository
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -28,6 +29,30 @@ class AccountService(
     private val jwtService: JwtService,
     private val currentUserProvider: CurrentUserProvider
 ) {
+    private fun checkOwnershipOrRole(targetAccountId: Long) {
+        val currentUserId = currentUserProvider.getCurrentUserId()
+        val isOwner = currentUserId == targetAccountId
+        val isPrivileged = currentUserProvider.isStaffOrAdmin()
+        if (!isOwner && !isPrivileged) {
+            throw AccessDeniedException("You do not have permission to access or modify this account.")
+        }
+    }
+
+    fun getAll(): List<AccountResponse> {
+        return accountRepository.findAll()
+            .filter { !it.isDeleted }
+            .map { it.toAccountResponse() }
+    }
+
+    fun getById(id: Long): AccountResponse {
+        checkOwnershipOrRole(id)
+
+        val account = accountRepository.findById(id)
+            .filter { !it.isDeleted }
+            .orElseThrow { ResourceNotFoundException("Account with id $id not found.") }
+        return account.toAccountResponse()
+    }
+
     fun register(request: RegisterRequest): RegisterResponse {
         if (accountRepository.findByUsername(request.username) != null) {
             throw ResourceAlreadyExistsException("Username already taken.")
@@ -77,16 +102,9 @@ class AccountService(
         )
     }
 
-    fun me(): AccountResponse {
-        val accountId = currentUserProvider.getCurrentUserId()
-        val account = accountRepository.findById(accountId)
-            .filter { !it.isDeleted }
-            .orElseThrow { ResourceNotFoundException("Account with id $accountId not found.") }
-
-        return account.toAccountResponse()
-    }
-
     fun update(id: Long, request: RegisterRequest): RegisterResponse {
+        checkOwnershipOrRole(id)
+
         val account = accountRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Account with id $id not found.") }
 
@@ -116,6 +134,8 @@ class AccountService(
     }
 
     fun delete(id: Long): RegisterResponse {
+        checkOwnershipOrRole(id)
+
         val account = accountRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Account with id $id not found.") }
         val deletedAccount = account.copy(
