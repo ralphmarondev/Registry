@@ -11,7 +11,7 @@
           "v": "17",
           "name": "login",
           "method": "POST",
-          "endpoint": "http://localhost:3333/api/account/login/",
+          "endpoint": "<<BASE_URL>>account/login/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
@@ -22,7 +22,7 @@
           },
           "body": {
             "contentType": "application/json",
-            "body": "{\n  \"username\": \"ralphmaron\",\n  \"password\": \"iscute\"\n}"
+            "body": "{\n  \"username\": \"admin\",\n  \"password\": \"adminnimda\"\n}"
           },
           "requestVariables": [],
           "responses": {},
@@ -32,18 +32,19 @@
           "v": "17",
           "name": "register",
           "method": "POST",
-          "endpoint": "http://localhost:3333/api/account/register/",
+          "endpoint": "<<BASE_URL>>account/register/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
           "testScript": "",
           "auth": {
-            "authType": "inherit",
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MDk1MDM2LCJleHAiOjE3ODcwOTg2MzZ9.FAL70UsLV5kST3UO6jhKJQzVRcfGruD1aMm1_-EquA4",
             "authActive": true
           },
           "body": {
             "contentType": "application/json",
-            "body": "{\n  \"username\": \"ralphmaron\",\n  \"password\": \"iscute\",\n  \"email\": \"edaralphmaron@gmail.com\",\n  \"roleId\": 2\n}"
+            "body": "{\n  \"username\": \"staff\",\n  \"password\": \"staff123\",\n  \"email\": \"staff@gmail.com\",\n  \"roleId\": 2\n}"
           },
           "requestVariables": [],
           "responses": {},
@@ -60,7 +61,7 @@
           "testScript": "",
           "auth": {
             "authType": "bearer",
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDMxMzI0LCJleHAiOjE3ODYwMzQ5MjR9.sW8OI6pVf5n7IMFyjLqPaVrP3z2PyWve0CYKcpJ8mWI",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NDI1NCwiZXhwIjoxNzg3MDY3ODU0fQ.vnqEJKBoTt-u8pSC6kIGK-lp72n7hhKYWdNKWUi0IL0",
             "authActive": true
           },
           "body": {
@@ -73,16 +74,59 @@
         },
         {
           "v": "17",
-          "name": "list",
+          "name": "account-list",
           "method": "GET",
-          "endpoint": "http://localhost:3333/api/account/all/",
+          "endpoint": "<<BASE_URL>>account/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
           "testScript": "",
           "auth": {
             "authType": "bearer",
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg1OTQwNDI1LCJleHAiOjE3ODU5NDQwMjV9.HxEUQRKcYiZmfUqeBsYT_O5tFQQcgALifYKn-hE1HZw",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MDk3MTg4LCJleHAiOjE3ODcxMDA3ODh9.1k1nGe5zQ8AJZzTF0JKGZa3dQBkyK1lko7VqW9PyaIY",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "register-batch-account",
+          "method": "POST",
+          "endpoint": "<<BASE_URL>>account/register/batch/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "[\n  {\n    \"username\": \"ralphmaron\",\n    \"password\": \"iscute\",\n    \"email\": \"edaralphmaron@gmail.com\",\n    \"roleId\": 1\n  },\n  {\n    \"username\": \"staff\",\n    \"password\": \"staff123\",\n    \"email\": \"staff123@gmail.com\",\n    \"roleId\": 2\n  }\n]"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "account-by-id",
+          "method": "GET",
+          "endpoint": "<<BASE_URL>>account/1/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MDk4NjQ4LCJleHAiOjE3ODcxMDIyNDh9.ej9u2bbPsH9yvygx_nGZkO1fOfLsRne5XpntZyV__rY",
             "authActive": true
           },
           "body": {
@@ -111,9 +155,53 @@
       "requests": [
         {
           "v": "17",
-          "name": "create",
+          "name": "create-role",
           "method": "POST",
-          "endpoint": "http://localhost:3333/api/role/",
+          "endpoint": "<<BASE_URL>>role/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MDk1NDU2LCJleHAiOjE3ODcwOTkwNTZ9.SV2JFOdwRciUgkG-MefTMyKCLvVdqhyVfeoBFlTNjN0",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"name\": \"Peanut\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "role-list",
+          "method": "GET",
+          "endpoint": "<<BASE_URL>>role/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MDk1MDM2LCJleHAiOjE3ODcwOTg2MzZ9.FAL70UsLV5kST3UO6jhKJQzVRcfGruD1aMm1_-EquA4",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "create-batch-role",
+          "method": "POST",
+          "endpoint": "<<BASE_URL>>role/register/batch/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
@@ -124,28 +212,7 @@
           },
           "body": {
             "contentType": "application/json",
-            "body": "{\n  \"name\": \"User\"\n}"
-          },
-          "requestVariables": [],
-          "responses": {},
-          "description": null
-        },
-        {
-          "v": "17",
-          "name": "list",
-          "method": "GET",
-          "endpoint": "http://localhost:3333/api/role/",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": null,
-            "body": null
+            "body": "[\n  {\n    \"name\": \"Administrator\"\n  },\n  {\n    \"name\": \"Staff\"\n  },\n  {\n    \"name\": \"FamilyAdmin\"\n  }\n]"
           },
           "requestVariables": [],
           "responses": {},
@@ -169,21 +236,21 @@
       "requests": [
         {
           "v": "17",
-          "name": "create",
+          "name": "create-family",
           "method": "POST",
-          "endpoint": "http://localhost:3333/api/family/",
+          "endpoint": "<<BASE_URL>>family/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
           "testScript": "",
           "auth": {
             "authType": "bearer",
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NTc1MSwiZXhwIjoxNzg3MDY5MzUxfQ.lvSqSSIQJuT2pX5UuQO7xxsdRnErYDipFBKmOV-oCXY",
             "authActive": true
           },
           "body": {
             "contentType": "application/json",
-            "body": "{\n  \"code\": \"fam-002\",\n  \"name\": \"uzumaki\",\n  \"blockNumber\": \"972A\",\n  \"barangay\": \"Flourishing\",\n  \"city\": \"Gonzaga\",\n  \"province\": \"Cagayan\",\n  \"landline\": \"333-000-222\",\n  \"householdNumber\": \"3501\",\n  \"householdType\": \"NUCLEAR\",\n  \"housingOwnership\": \"OWNED\",\n  \"registrationStatus\": \"APPROVED\"\n}"
+            "body": "{\n  \"code\": \"FAM-001\",\n  \"name\": \"Forger\",\n  \"blockNumber\": \"973A\",\n  \"barangay\": \"Smart\",\n  \"city\": \"Gonzaga\",\n  \"province\": \"Cagayan\",\n  \"landline\": \"433-000-333\",\n  \"householdNumber\": \"3501\",\n  \"householdType\": \"NUCLEAR\",\n  \"housingOwnership\": \"OWNED\",\n  \"registrationStatus\": \"APPROVED\",\n  \"head\": {\n    \"familyId\": 1,\n    \"firstName\": \"Loid\",\n    \"middleName\": \"Alexander\",\n    \"lastName\": \"Forger\",\n    \"suffix\": null,\n    \"sex\": \"MALE\",\n    \"dateOfBirth\": \"1987-04-07\",\n    \"placeOfBirth\": \"Berlint, Ostania\",\n    \"phoneNumber\": \"09171234568\",\n    \"civilStatus\": \"MARRIED\",\n    \"nationality\": \"Ostanian\",\n    \"religion\": \"Catholic\",\n    \"occupation\": \"Psychiatrist\",\n    \"educationalAttainment\": \"College Graduate\",\n    \"isHead\": true,\n    \"relationshipToHead\": \"SELF\",\n    \"isIndigenous\": false,\n    \"beneficiaryPrograms\": []\n  },\n  \"account\": {\n    \"username\": \"loid\",\n    \"password\": \"12345678\",\n    \"email\": \"loidforger@gmail.com\",\n    \"roleId\": 1\n  }\n}"
           },
           "requestVariables": [],
           "responses": {},
@@ -191,9 +258,31 @@
         },
         {
           "v": "17",
-          "name": "list",
+          "name": "family-list",
           "method": "GET",
-          "endpoint": "http://localhost:3333/api/family/",
+          "endpoint": "<<BASE_URL>>family/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NTc1MSwiZXhwIjoxNzg3MDY5MzUxfQ.lvSqSSIQJuT2pX5UuQO7xxsdRnErYDipFBKmOV-oCXY",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "family-by-code",
+          "method": "GET",
+          "endpoint": "<<BASE_URL>>family/fam-002/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
@@ -213,40 +302,18 @@
         },
         {
           "v": "17",
-          "endpoint": "http://localhost:3333/api/family/fam-002/",
-          "name": "get-by-code",
-          "params": [],
-          "headers": [],
-          "method": "GET",
-          "auth": {
-            "authType": "bearer",
-            "authActive": true,
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ"
-          },
-          "preRequestScript": "",
-          "testScript": "",
-          "body": {
-            "contentType": null,
-            "body": null
-          },
-          "requestVariables": [],
-          "responses": {},
-          "description": null
-        },
-        {
-          "v": "17",
-          "endpoint": "http://localhost:3333/api/family/2/",
-          "name": "delete",
-          "params": [],
-          "headers": [],
+          "name": "delete-family",
           "method": "DELETE",
-          "auth": {
-            "authType": "bearer",
-            "authActive": true,
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ"
-          },
+          "endpoint": "<<BASE_URL>>family/2/",
+          "params": [],
+          "headers": [],
           "preRequestScript": "",
           "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY1MjgzLCJleHAiOjE3ODYwNjg4ODN9.7KZoMpuRF9b8pNeRm7C038v2MHnNLbXjAAgyp_aLOVQ",
+            "authActive": true
+          },
           "body": {
             "contentType": null,
             "body": null
@@ -273,16 +340,16 @@
       "requests": [
         {
           "v": "17",
-          "name": "list",
+          "name": "member-list",
           "method": "GET",
-          "endpoint": "http://localhost:3333/api/member/",
+          "endpoint": "<<BASE_URL>>member/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
           "testScript": "",
           "auth": {
             "authType": "bearer",
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDY0NzQ4LCJleHAiOjE3ODYwNjgzNDh9._Qp4WQ9VkfEdjh0LoGRGJRFMQUmxJ1MTCO3_iihxne0",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NTc1MSwiZXhwIjoxNzg3MDY5MzUxfQ.lvSqSSIQJuT2pX5UuQO7xxsdRnErYDipFBKmOV-oCXY",
             "authActive": true
           },
           "body": {
@@ -295,21 +362,125 @@
         },
         {
           "v": "17",
-          "name": "create",
+          "name": "create-member",
           "method": "POST",
-          "endpoint": "http://localhost:3333/api/member/",
+          "endpoint": "<<BASE_URL>>member/",
           "params": [],
           "headers": [],
           "preRequestScript": "",
           "testScript": "",
           "auth": {
             "authType": "bearer",
-            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg1OTI1MjEyLCJleHAiOjE3ODU5Mjg4MTJ9.x3FXSBrDhSNstFu6X48awUfKUr5XjuxtEgq3AXBeKxU",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MDcyOTAwLCJleHAiOjE3ODYwNzY1MDB9.BTFMZP-1Et_Im0uHxaLR1voDTa67l3vwD1Spd0g2API",
             "authActive": true
           },
           "body": {
             "contentType": "application/json",
-            "body": "{\n  \"familyId\": 1,\n  \"firstName\": \"Yor\",\n  \"middleName\": \"Grace\",\n  \"lastName\": \"Forger\",\n  \"suffix\": null,\n  \"sex\": \"FEMALE\",\n  \"dateOfBirth\": \"1987-04-06\",\n  \"placeOfBirth\": \"Berlint, Ostania\",\n  \"phoneNumber\": \"09171234568\",\n  \"civilStatus\": \"MARRIED\",\n  \"nationality\": \"Ostanian\",\n  \"religion\": \"Catholic\",\n  \"occupation\": \"City Hall Clerk\",\n  \"educationalAttainment\": \"College Graduate\",\n  \"isHead\": false,\n  \"relationshipToHead\": \"SPOUSE\"\n}"
+            "body": "{\n  \"familyId\": 1,\n  \"firstName\": \"Loid\",\n  \"middleName\": \"Alexander\",\n  \"lastName\": \"Forger\",\n  \"suffix\": null,\n  \"sex\": \"MALE\",\n  \"dateOfBirth\": \"1987-04-06\",\n  \"placeOfBirth\": \"Berlint, Ostania\",\n  \"phoneNumber\": \"09171234568\",\n  \"civilStatus\": \"MARRIED\",\n  \"nationality\": \"Ostanian\",\n  \"religion\": \"Catholic\",\n  \"occupation\": \"Psychiatrist\",\n  \"educationalAttainment\": \"College Graduate\",\n  \"isHead\": true,\n  \"relationshipToHead\": \"SELF\",\n  \"isIndigenous\": false,\n  \"beneficiaryPrograms\": [1, 2]\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "family-member-list",
+          "method": "GET",
+          "endpoint": "<<BASE_URL>>member/family/1/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NTc1MSwiZXhwIjoxNzg3MDY5MzUxfQ.lvSqSSIQJuT2pX5UuQO7xxsdRnErYDipFBKmOV-oCXY",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null,
+      "preRequestScript": "",
+      "testScript": ""
+    },
+    {
+      "v": 12,
+      "name": "programs",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "program-list",
+          "method": "GET",
+          "endpoint": "<<BASE_URL>>program/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NDI1NCwiZXhwIjoxNzg3MDY3ODU0fQ.vnqEJKBoTt-u8pSC6kIGK-lp72n7hhKYWdNKWUi0IL0",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "create-program",
+          "method": "POST",
+          "endpoint": "<<BASE_URL>>program/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc4NzA2NDUzNSwiZXhwIjoxNzg3MDY4MTM1fQ.0i6fN5GFCNGPJR4KyDm2c4LdYpe5RYVkrjVuLgT0Po0",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"name\": \"OFW\",\n  \"description\": \"Overseas Filipino Worker\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "create-batch-program",
+          "method": "POST",
+          "endpoint": "<<BASE_URL>>beneficiary-programs/batch/",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "bearer",
+            "token": "yJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJyYWxwaG1hcm9uIiwiaWF0IjoxNzg2MzYzMTg3LCJleHAiOjE3ODYzNjY3ODd9.3HejB9FTkMDEsIhQvQa-EOIvx5LR42QE1z2OggCpnJA",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "[\n  {\n    \"name\": \"Farmer\",\n    \"description\": \"Farmer\"\n  },\n  {\n    \"name\": \n  }\n]"
           },
           "requestVariables": [],
           "responses": {},
