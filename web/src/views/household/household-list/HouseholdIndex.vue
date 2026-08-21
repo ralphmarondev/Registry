@@ -380,3 +380,7 @@ onMounted(() => {
 		</div>
 	</MainLayout>
 </template>
+
+<style scoped>
+@import "@/assets/css/custom.css";
+</style>
