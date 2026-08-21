@@ -9,6 +9,11 @@ export const useAuthStore = defineStore('auth', () => {
 	const account = ref<Account | null>(null)
 	const isAuthenticated = computed(() => !!accessToken.value)
 
+	const setAccount = (_account: Account) => {
+		account.value = _account
+		if (_account.id) localStorage.setItem('account_id', `${_account.id}`)
+	}
+
 	const setTokens = (_accessToken: string, _refreshToken?: string) => {
 		accessToken.value = _accessToken
 		if (_refreshToken) refreshToken.value = _refreshToken
@@ -22,9 +27,20 @@ export const useAuthStore = defineStore('auth', () => {
 		refreshToken.value = localStorage.getItem('refresh_token')
 	}
 
-	const fetchMe = async () => {
-		const {data} = await axiosInstance.get<Account>('account/me/')
-		account.value = data
+	const loadAccount = async () => {
+		const accountId = localStorage.getItem('account_id')
+
+		if (!accountId || !accessToken.value) {
+			return
+		}
+		try {
+			const {data} = await axiosInstance.get<Account>(`account/${accountId}/`)
+			console.log(data)
+			account.value = data
+		} catch (error) {
+			console.error('Failed to load account:', error)
+			logout()
+		}
 	}
 
 	const logout = () => {
@@ -34,7 +50,18 @@ export const useAuthStore = defineStore('auth', () => {
 
 		localStorage.removeItem('access_token')
 		localStorage.removeItem('refresh_token')
+		localStorage.removeItem('account_id')
 	}
 
-	return {accessToken, refreshToken, account, isAuthenticated, setTokens, loadTokens, fetchMe, logout}
+	return {
+		accessToken,
+		refreshToken,
+		account,
+		isAuthenticated,
+		setTokens,
+		setAccount,
+		loadTokens,
+		loadAccount,
+		logout
+	}
 })

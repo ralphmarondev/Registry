@@ -9,7 +9,7 @@ onMounted(async () => {
 
 	if (authStore.isAuthenticated) {
 		try {
-			await authStore.fetchMe()
+			await authStore.loadAccount()
 			console.log('')
 		} catch {
 			authStore.logout()
