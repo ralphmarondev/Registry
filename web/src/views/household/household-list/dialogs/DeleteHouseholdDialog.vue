@@ -2,23 +2,18 @@
 import {computed, ref, watch} from 'vue'
 import axiosInstance from '@/axiosInstance.ts'
 
-// Props
 interface Props {
 	visible: boolean
-	householdId: number | null
-	householdName: string
-	householdCode: string
+	id: number | null
 }
 
 const props = defineProps<Props>()
 
-// Emits
 const emit = defineEmits<{
 	(e: 'update:visible', value: boolean): void
 	(e: 'success'): void
 }>()
 
-// State
 const household = ref<any>(null)
 const isLoading = ref(false)
 const fetchError = ref<string | null>(null)
@@ -27,25 +22,23 @@ const error = ref<string | null>(null)
 const confirmationCode = ref('')
 const showConfirmationError = ref(false)
 
-// Computed dialog visibility
 const dialogVisible = computed({
 	get: () => props.visible,
 	set: (value) => emit('update:visible', value)
 })
 
-// Check if confirmation code matches
 const isConfirmationValid = computed(() => {
-	return confirmationCode.value === props.householdCode
+	if (!household) return
+	return confirmationCode.value === household.value.code
 })
 
-// Fetch household data
 const fetchHousehold = async () => {
-	if (!props.householdId) return
+	if (!props.id) return
 
 	isLoading.value = true
 	fetchError.value = null
 	try {
-		const response = await axiosInstance.get(`family/${props.householdCode}/`)
+		const response = await axiosInstance.get(`family/${props.id}/`)
 		household.value = response.data
 	} catch (err) {
 		fetchError.value = 'Failed to load household details. Please try again.'
@@ -55,21 +48,20 @@ const fetchHousehold = async () => {
 	}
 }
 
-// Delete handler
 const handleDelete = async () => {
 	if (!isConfirmationValid.value) {
 		showConfirmationError.value = true
 		return
 	}
 
-	if (!props.householdId) return
+	if (!props.id) return
 
 	isDeleting.value = true
 	error.value = null
 	showConfirmationError.value = false
 
 	try {
-		await axiosInstance.delete(`family/${props.householdId}/`)
+		await axiosInstance.delete(`family/${props.id}/`)
 		emit('success')
 		dialogVisible.value = false
 	} catch (err: any) {
@@ -80,7 +72,6 @@ const handleDelete = async () => {
 	}
 }
 
-// Close handler
 const handleClose = () => {
 	dialogVisible.value = false
 	error.value = null
@@ -90,9 +81,8 @@ const handleClose = () => {
 	household.value = null
 }
 
-// Watch for dialog open to fetch data
 watch(() => props.visible, (newVal) => {
-	if (newVal && props.householdId) {
+	if (newVal && props.id) {
 		fetchHousehold()
 	} else if (!newVal) {
 		household.value = null
@@ -103,8 +93,7 @@ watch(() => props.visible, (newVal) => {
 	}
 })
 
-// Watch for householdId changes
-watch(() => props.householdId, (newVal) => {
+watch(() => props.id, (newVal) => {
 	if (props.visible && newVal) {
 		fetchHousehold()
 	}
@@ -112,15 +101,10 @@ watch(() => props.householdId, (newVal) => {
 </script>
 
 <template>
-	<!-- Dialog Overlay -->
-	<div
-			v-if="dialogVisible"
-			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-			@click.self="handleClose">
-
-		<!-- Dialog Content -->
+	<div v-if="dialogVisible"
+	     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+	     @click.self="handleClose">
 		<div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-			<!-- Header -->
 			<div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
 				<h3 class="text-xl font-bold text-gray-800">Delete Household</h3>
 				<button
@@ -130,9 +114,7 @@ watch(() => props.householdId, (newVal) => {
 				</button>
 			</div>
 
-			<!-- Body -->
 			<div class="flex-1 overflow-y-auto px-6 py-4">
-				<!-- Loading State -->
 				<div v-if="isLoading" class="flex items-center justify-center py-12">
 					<div class="text-center">
 						<i class="bx bx-loader-alt text-4xl text-emerald-500 animate-spin block mb-3"></i>
@@ -140,23 +122,19 @@ watch(() => props.householdId, (newVal) => {
 					</div>
 				</div>
 
-				<!-- Error State -->
 				<div v-else-if="fetchError"
 				     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
 					<i class="bx bx-error-circle text-xl"></i>
 					{{ fetchError }}
 				</div>
 
-				<!-- Content -->
 				<template v-else-if="household">
-					<!-- Delete Error Alert -->
 					<div v-if="error"
 					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
 						<i class="bx bx-error-circle text-xl"></i>
 						{{ error }}
 					</div>
 
-					<!-- Warning Message -->
 					<div class="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
 						<i class="bx bx-error text-xl text-amber-600 mt-0.5"></i>
 						<div class="text-sm text-amber-800">
@@ -165,7 +143,6 @@ watch(() => props.householdId, (newVal) => {
 						</div>
 					</div>
 
-					<!-- Household Information Section -->
 					<div class="mb-6">
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
 							<i class="bx bx-info-circle mr-1"></i>
@@ -179,8 +156,7 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Family Name</label>
@@ -189,8 +165,7 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Block Number</label>
@@ -199,8 +174,7 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Household Number</label>
@@ -209,13 +183,11 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 						</div>
 					</div>
 
-					<!-- Address Information Section -->
 					<div class="mb-6">
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
 							<i class="bx bx-map mr-1"></i>
@@ -229,8 +201,7 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">City</label>
@@ -239,8 +210,7 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
@@ -249,13 +219,11 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 						</div>
 					</div>
 
-					<!-- Confirmation Section -->
 					<div>
 						<h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
 							<i class="bx bx-shield mr-1"></i>
@@ -274,8 +242,7 @@ watch(() => props.householdId, (newVal) => {
 										placeholder="Type the family code to confirm"
 										class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-colors"
 										:class="showConfirmationError && !isConfirmationValid ? 'border-red-500' : 'border-gray-300'"
-										@input="showConfirmationError = false"
-								>
+										@input="showConfirmationError = false">
 								<i v-if="isConfirmationValid"
 								   class="bx bx-check-circle absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-lg"></i>
 								<i v-else-if="confirmationCode && !isConfirmationValid"
@@ -294,7 +261,6 @@ watch(() => props.householdId, (newVal) => {
 				</template>
 			</div>
 
-			<!-- Footer -->
 			<div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
 				<button
 						@click="handleClose"
@@ -313,34 +279,3 @@ watch(() => props.householdId, (newVal) => {
 		</div>
 	</div>
 </template>
-
-<style scoped>
-/* Animation for dialog */
-.fixed {
-	animation: fadeIn 0.2s ease-out;
-}
-
-.bg-white {
-	animation: slideUp 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes slideUp {
-	from {
-		transform: translateY(20px) scale(0.95);
-		opacity: 0;
-	}
-	to {
-		transform: translateY(0) scale(1);
-		opacity: 1;
-	}
-}
-</style>

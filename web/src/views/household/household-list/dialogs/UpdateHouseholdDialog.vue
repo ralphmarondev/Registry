@@ -5,8 +5,7 @@ import axiosInstance from '@/axiosInstance.ts'
 
 interface Props {
 	visible: boolean
-	householdId: number | null
-	householdCode: string | null
+	id: number | null
 }
 
 const props = defineProps<Props>()
@@ -18,7 +17,6 @@ const emit = defineEmits<{
 
 const barangayStore = useBarangayStore()
 
-// Form state
 const formData = ref({
 	code: '',
 	name: '',
@@ -33,14 +31,12 @@ const formData = ref({
 	registrationStatus: 'APPROVED'
 })
 
-// Validation errors
 const errors = ref<Record<string, string>>({})
 const isSubmitting = ref(false)
 const isLoading = ref(false)
 const submitError = ref<string | null>(null)
 const fetchError = ref<string | null>(null)
 
-// Household type options
 const householdTypeOptions = [
 	{value: 'NUCLEAR', label: 'Nuclear'},
 	{value: 'EXTENDED', label: 'Extended'},
@@ -48,7 +44,6 @@ const householdTypeOptions = [
 	{value: 'SINGLE_PARENT', label: 'Single Parent'}
 ]
 
-// Housing ownership options
 const housingOwnershipOptions = [
 	{value: 'OWNED', label: 'Owned'},
 	{value: 'RENTED', label: 'Rented'},
@@ -57,7 +52,6 @@ const housingOwnershipOptions = [
 	{value: 'OTHER', label: 'Other'}
 ]
 
-// Registration status options
 const registrationStatusOptions = [
 	{value: 'APPROVED', label: 'Approved'},
 	{value: 'PENDING', label: 'Pending'},
@@ -65,13 +59,11 @@ const registrationStatusOptions = [
 	{value: 'DRAFT', label: 'Draft'}
 ]
 
-// Computed dialog visibility
 const dialogVisible = computed({
 	get: () => props.visible,
 	set: (value) => emit('update:visible', value)
 })
 
-// Get status badge color
 const getStatusBadgeClass = (status: string) => {
 	const statusMap: Record<string, string> = {
 		'APPROVED': 'bg-green-100 text-green-700',
@@ -82,14 +74,13 @@ const getStatusBadgeClass = (status: string) => {
 	return statusMap[status] || 'bg-gray-100 text-gray-700'
 }
 
-// Fetch household data
 const fetchHousehold = async () => {
-	if (!props.householdId) return
+	if (!props.id) return
 
 	isLoading.value = true
 	fetchError.value = null
 	try {
-		const response = await axiosInstance.get(`family/${props.householdCode}/`)
+		const response = await axiosInstance.get(`family/${props.id}/`)
 		const data = response.data
 		formData.value = {
 			code: data.code || '',
@@ -112,7 +103,6 @@ const fetchHousehold = async () => {
 	}
 }
 
-// Reset form
 const resetForm = () => {
 	formData.value = {
 		code: '',
@@ -132,7 +122,6 @@ const resetForm = () => {
 	fetchError.value = null
 }
 
-// Validate form
 const validateForm = (): boolean => {
 	const newErrors: Record<string, string> = {}
 
@@ -162,16 +151,15 @@ const validateForm = (): boolean => {
 	return Object.keys(newErrors).length === 0
 }
 
-// Submit form
 const handleSubmit = async () => {
 	if (!validateForm()) return
-	if (!props.householdId) return
+	if (!props.id) return
 
 	isSubmitting.value = true
 	submitError.value = null
 
 	try {
-		await axiosInstance.put(`family/${props.householdId}/`, formData.value)
+		await axiosInstance.put(`family/${props.id}/`, formData.value)
 		emit('success')
 		dialogVisible.value = false
 		resetForm()
@@ -183,23 +171,20 @@ const handleSubmit = async () => {
 	}
 }
 
-// Close dialog handler
 const handleClose = () => {
 	dialogVisible.value = false
 	resetForm()
 }
 
-// Watch for dialog open to fetch data
 watch(() => props.visible, (newVal) => {
-	if (newVal && props.householdId) {
+	if (newVal && props.id) {
 		fetchHousehold()
 	} else if (!newVal) {
 		resetForm()
 	}
 })
 
-// Watch for householdId changes
-watch(() => props.householdId, (newVal) => {
+watch(() => props.id, (newVal) => {
 	if (props.visible && newVal) {
 		fetchHousehold()
 	}
@@ -207,15 +192,10 @@ watch(() => props.householdId, (newVal) => {
 </script>
 
 <template>
-	<!-- Dialog Overlay -->
-	<div
-			v-if="dialogVisible"
-			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-			@click.self="handleClose">
-
-		<!-- Dialog Content -->
+	<div v-if="dialogVisible"
+	     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+	     @click.self="handleClose">
 		<div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-			<!-- Header -->
 			<div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
 				<div class="flex items-center gap-3">
 					<h3 class="text-xl font-bold text-gray-800">Edit Household</h3>
@@ -233,9 +213,7 @@ watch(() => props.householdId, (newVal) => {
 				</button>
 			</div>
 
-			<!-- Form Body -->
 			<div class="flex-1 overflow-y-auto px-6 py-4">
-				<!-- Loading State -->
 				<div v-if="isLoading" class="flex items-center justify-center py-12">
 					<div class="text-center">
 						<i class="bx bx-loader-alt text-4xl text-emerald-500 animate-spin block mb-3"></i>
@@ -243,25 +221,20 @@ watch(() => props.householdId, (newVal) => {
 					</div>
 				</div>
 
-				<!-- Error State -->
 				<div v-else-if="fetchError"
 				     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 					<i class="bx bx-error-circle text-xl"></i>
 					{{ fetchError }}
 				</div>
 
-				<!-- Form -->
 				<form v-else @submit.prevent="handleSubmit" class="space-y-4">
-					<!-- Submit Error Alert -->
 					<div v-if="submitError"
 					     class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 						<i class="bx bx-error-circle text-xl"></i>
 						{{ submitError }}
 					</div>
 
-					<!-- 2 Column Grid -->
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<!-- Family Code - Read-only -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Family Code <span class="text-red-500">*</span>
@@ -272,8 +245,7 @@ watch(() => props.householdId, (newVal) => {
 										type="text"
 										class="w-full px-3 py-2 border rounded-lg bg-gray-50 text-gray-600 uppercase cursor-not-allowed"
 										readonly
-										disabled
-								>
+										disabled>
 								<i class="bx bx-lock-alt absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
 							</div>
 							<p class="mt-1 text-xs text-gray-500">
@@ -282,7 +254,6 @@ watch(() => props.householdId, (newVal) => {
 							</p>
 						</div>
 
-						<!-- Family Name -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Family Name <span class="text-red-500">*</span>
@@ -292,12 +263,9 @@ watch(() => props.householdId, (newVal) => {
 									type="text"
 									placeholder="e.g., Dela Cruz"
 									class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-									:class="errors.name ? 'border-red-500' : 'border-gray-300'"
-							>
+									:class="errors.name ? 'border-red-500' : 'border-gray-300'">
 							<p v-if="errors.name" class="mt-1 text-xs text-red-500">{{ errors.name }}</p>
 						</div>
-
-						<!-- Block Number -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Block Number <span class="text-red-500">*</span>
@@ -307,12 +275,10 @@ watch(() => props.householdId, (newVal) => {
 									type="text"
 									placeholder="e.g., 972A"
 									class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-									:class="errors.blockNumber ? 'border-red-500' : 'border-gray-300'"
-							>
+									:class="errors.blockNumber ? 'border-red-500' : 'border-gray-300'">
 							<p v-if="errors.blockNumber" class="mt-1 text-xs text-red-500">{{ errors.blockNumber }}</p>
 						</div>
 
-						<!-- Household Number -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Household Number <span class="text-red-500">*</span>
@@ -322,12 +288,10 @@ watch(() => props.householdId, (newVal) => {
 									type="text"
 									placeholder="e.g., 3501"
 									class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-									:class="errors.householdNumber ? 'border-red-500' : 'border-gray-300'"
-							>
+									:class="errors.householdNumber ? 'border-red-500' : 'border-gray-300'">
 							<p v-if="errors.householdNumber" class="mt-1 text-xs text-red-500">{{ errors.householdNumber }}</p>
 						</div>
 
-						<!-- Barangay -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Barangay <span class="text-red-500">*</span>
@@ -335,8 +299,7 @@ watch(() => props.householdId, (newVal) => {
 							<select
 									v-model="formData.barangay"
 									class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-									:class="errors.barangay ? 'border-red-500' : 'border-gray-300'"
-							>
+									:class="errors.barangay ? 'border-red-500' : 'border-gray-300'">
 								<option value="">Select Barangay</option>
 								<option
 										v-for="barangay in barangayStore.barangays"
@@ -348,7 +311,6 @@ watch(() => props.householdId, (newVal) => {
 							<p v-if="errors.barangay" class="mt-1 text-xs text-red-500">{{ errors.barangay }}</p>
 						</div>
 
-						<!-- Landline -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Landline Number
@@ -357,11 +319,9 @@ watch(() => props.householdId, (newVal) => {
 									v-model="formData.landline"
 									type="text"
 									placeholder="e.g., 333-000-222"
-									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-							>
+									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-colors">
 						</div>
 
-						<!-- City -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								City <span class="text-red-500">*</span>
@@ -371,12 +331,10 @@ watch(() => props.householdId, (newVal) => {
 									type="text"
 									placeholder="e.g., Gonzaga"
 									class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-									:class="errors.city ? 'border-red-500' : 'border-gray-300'"
-							>
+									:class="errors.city ? 'border-red-500' : 'border-gray-300'">
 							<p v-if="errors.city" class="mt-1 text-xs text-red-500">{{ errors.city }}</p>
 						</div>
 
-						<!-- Province -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Province <span class="text-red-500">*</span>
@@ -391,15 +349,13 @@ watch(() => props.householdId, (newVal) => {
 							<p v-if="errors.province" class="mt-1 text-xs text-red-500">{{ errors.province }}</p>
 						</div>
 
-						<!-- Household Type -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Household Type
 							</label>
 							<select
 									v-model="formData.householdType"
-									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-							>
+									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-colors">
 								<option
 										v-for="option in householdTypeOptions"
 										:key="option.value"
@@ -409,15 +365,13 @@ watch(() => props.householdId, (newVal) => {
 							</select>
 						</div>
 
-						<!-- Housing Ownership -->
 						<div class="col-span-1">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Housing Ownership
 							</label>
 							<select
 									v-model="formData.housingOwnership"
-									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-							>
+									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-colors">
 								<option
 										v-for="option in housingOwnershipOptions"
 										:key="option.value"
@@ -427,15 +381,13 @@ watch(() => props.householdId, (newVal) => {
 							</select>
 						</div>
 
-						<!-- Registration Status -->
 						<div class="col-span-2">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Registration Status
 							</label>
 							<select
 									v-model="formData.registrationStatus"
-									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-colors"
-							>
+									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-colors">
 								<option
 										v-for="option in registrationStatusOptions"
 										:key="option.value"
@@ -448,10 +400,9 @@ watch(() => props.householdId, (newVal) => {
 				</form>
 			</div>
 
-			<!-- Footer -->
 			<div class="flex items-center justify-between px-6 py-4 border-t border-gray-200">
 				<router-link
-						:to="{ name: 'household-details', params: { code: householdCode } }"
+						:to="{ name: 'household-details', params: { id: id } }"
 						class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm hover:shadow-md"
 						@click="handleClose">
 					<i class="bx bx-group text-lg"></i>
@@ -475,34 +426,3 @@ watch(() => props.householdId, (newVal) => {
 		</div>
 	</div>
 </template>
-
-<style scoped>
-/* Animation for dialog */
-.fixed {
-	animation: fadeIn 0.2s ease-out;
-}
-
-.bg-white {
-	animation: slideUp 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes slideUp {
-	from {
-		transform: translateY(20px) scale(0.95);
-		opacity: 0;
-	}
-	to {
-		transform: translateY(0) scale(1);
-		opacity: 1;
-	}
-}
-</style>

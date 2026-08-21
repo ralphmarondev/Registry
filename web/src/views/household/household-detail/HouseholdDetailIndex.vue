@@ -7,14 +7,11 @@ import axiosInstance from '@/axiosInstance'
 const route = useRoute()
 const router = useRouter()
 
-// State
-const householdCode = ref<string | null>(null)
 const isLoading = ref(false)
 const household = ref<any>(null)
 const familyMembers = ref<any[]>([])
 const error = ref<string | null>(null)
 
-// Household type options for display
 const householdTypeOptions = [
 	{value: 'NUCLEAR', label: 'Nuclear'},
 	{value: 'EXTENDED', label: 'Extended'},
@@ -31,13 +28,11 @@ const housingOwnershipOptions = [
 	{value: 'OTHER', label: 'Other'}
 ]
 
-// Get label from value
 const getLabel = (value: string, options: Array<{ value: string, label: string }>) => {
 	const option = options.find(opt => opt.value === value)
 	return option ? option.label : value
 }
 
-// Get status badge color
 const getStatusBadgeClass = (status: string) => {
 	const statusMap: Record<string, string> = {
 		'APPROVED': 'bg-green-100 text-green-700',
@@ -48,10 +43,9 @@ const getStatusBadgeClass = (status: string) => {
 	return statusMap[status] || 'bg-gray-100 text-gray-700'
 }
 
-// Get relationship badge color
 const getRelationshipBadgeClass = (relationship: string) => {
 	const relationshipMap: Record<string, string> = {
-		'HEAD': 'bg-blue-100 text-blue-700',
+		'SELF': 'bg-blue-100 text-blue-700',
 		'SPOUSE': 'bg-pink-100 text-pink-700',
 		'CHILD': 'bg-green-100 text-green-700',
 		'SIBLING': 'bg-purple-100 text-purple-700',
@@ -61,10 +55,9 @@ const getRelationshipBadgeClass = (relationship: string) => {
 	return relationshipMap[relationship] || 'bg-gray-100 text-gray-700'
 }
 
-// Get relationship icon
 const getRelationshipIcon = (relationship: string) => {
 	const iconMap: Record<string, string> = {
-		'HEAD': 'bx-user-check',
+		'SELF': 'bx-user-check',
 		'SPOUSE': 'bx-heart',
 		'CHILD': 'bx-baby',
 		'SIBLING': 'bx-user-voice',
@@ -74,7 +67,6 @@ const getRelationshipIcon = (relationship: string) => {
 	return iconMap[relationship] || 'bx-user'
 }
 
-// Format display value
 const formatDisplayValue = (value: string | null | undefined, field: string) => {
 	if (!value) return '—'
 	const uppercaseFields = ['code', 'barangay', 'city', 'province', 'blockNumber']
@@ -84,7 +76,6 @@ const formatDisplayValue = (value: string | null | undefined, field: string) => 
 	return value
 }
 
-// Format date
 const formatDate = (dateString: string) => {
 	if (!dateString) return '—'
 	const date = new Date(dateString)
@@ -95,26 +86,22 @@ const formatDate = (dateString: string) => {
 	})
 }
 
-// Fetch household details
 const fetchHousehold = async () => {
-	const code = route.params.code as string
-	if (!code) {
-		error.value = 'No household code provided'
+	const id = route.params.id as string
+	if (!id) {
+		error.value = 'No household id provided'
 		return
 	}
 
-	householdCode.value = code
 	isLoading.value = true
 	error.value = null
 
 	try {
-		// Fetch household details
-		const response = await axiosInstance.get(`family/${code}/`)
+		const response = await axiosInstance.get(`family/${id}/`)
 		household.value = response.data
 
-		// Fetch family members
 		try {
-			const membersResponse = await axiosInstance.get(`family/${code}/members/`)
+			const membersResponse = await axiosInstance.get(`member/family/${id}/`)
 			familyMembers.value = membersResponse.data || []
 		} catch (err) {
 			console.log('No family members found or endpoint not available')
@@ -128,19 +115,16 @@ const fetchHousehold = async () => {
 	}
 }
 
-// Navigate to edit
 const goToEdit = () => {
-	if (householdCode.value) {
-		router.push(`/households/${householdCode.value}/edit`)
+	if (household.value.id) {
+		router.push(`/family/${household.value.id}/`)
 	}
 }
 
-// Get member count
 const getMemberCount = () => {
 	return familyMembers.value.length || household.value?.memberCount || 0
 }
 
-// Get head of household
 const getHeadOfHousehold = () => {
 	const head = familyMembers.value.find(member => member.relationship === 'HEAD')
 	if (head) {
@@ -157,7 +141,6 @@ onMounted(() => {
 <template>
 	<MainLayout>
 		<div class="space-y-4">
-			<!-- Header -->
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 				<div>
 					<div class="flex items-center gap-3">
@@ -181,7 +164,6 @@ onMounted(() => {
 				</button>
 			</div>
 
-			<!-- Loading State -->
 			<div v-if="isLoading" class="bg-white rounded-lg shadow-sm border border-emerald-100 p-8">
 				<div class="flex items-center justify-center py-12">
 					<div class="text-center">
@@ -191,7 +173,6 @@ onMounted(() => {
 				</div>
 			</div>
 
-			<!-- Error State -->
 			<div v-else-if="error" class="bg-white rounded-lg shadow-sm border border-emerald-100 p-6">
 				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 					<i class="bx bx-error-circle text-xl"></i>
@@ -199,9 +180,7 @@ onMounted(() => {
 				</div>
 			</div>
 
-			<!-- Content -->
 			<template v-else-if="household">
-				<!-- Summary Cards -->
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					<div class="bg-white rounded-lg shadow-sm border border-emerald-100 p-4">
 						<div class="flex items-center gap-3">
@@ -232,9 +211,9 @@ onMounted(() => {
 							</div>
 							<div>
 								<p class="text-xs text-gray-500">Household Type</p>
-								<p class="text-sm font-medium text-gray-800">{{
-										getLabel(household.householdType, householdTypeOptions)
-								                                             }}</p>
+								<p class="text-sm font-medium text-gray-800">
+									{{ getLabel(household.householdType, householdTypeOptions) }}
+								</p>
 							</div>
 						</div>
 					</div>
@@ -251,7 +230,6 @@ onMounted(() => {
 					</div>
 				</div>
 
-				<!-- Household Information -->
 				<div class="bg-white rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
 					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
 						<h4 class="text-sm font-semibold text-gray-700">
@@ -268,8 +246,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Family Name</label>
@@ -278,8 +255,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Block Number</label>
@@ -288,8 +264,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Household Number</label>
@@ -298,8 +273,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Barangay</label>
@@ -308,8 +282,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">City</label>
@@ -318,8 +291,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
@@ -328,8 +300,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 uppercase cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Landline Number</label>
@@ -338,8 +309,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Household Type</label>
@@ -348,8 +318,7 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">Housing Ownership</label>
@@ -358,12 +327,10 @@ onMounted(() => {
 										type="text"
 										class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-default"
 										readonly
-										disabled
-								>
+										disabled>
 							</div>
 						</div>
 
-						<!-- Deleted Status -->
 						<div v-if="household.deleted"
 						     class="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
 							<i class="bx bx-trash text-xl"></i>
@@ -372,7 +339,6 @@ onMounted(() => {
 					</div>
 				</div>
 
-				<!-- Family Members Section -->
 				<div class="bg-white rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
 					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
 						<h4 class="text-sm font-semibold text-gray-700">
