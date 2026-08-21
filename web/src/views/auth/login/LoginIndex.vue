@@ -80,9 +80,6 @@ const login = async () => {
 							<label class="block text-sm font-medium text-gray-700">
 								Password
 							</label>
-<!--							<a href="/forgot-password" class="text-sm text-emerald-600 hover:text-emerald-700 transition-colors">-->
-<!--								Forgot password?-->
-<!--							</a>-->
 						</div>
 						<input
 								v-model="password"
