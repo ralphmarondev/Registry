@@ -50,7 +50,7 @@ const router = createRouter({
 			path: '/accounts',
 			name: 'accounts',
 			meta: {requiresAuth: true, title: 'Accounts'},
-			component: () => import('@/views/accounts/AccountIndex.vue')
+			component: () => import('@/views/accounts/account-list/AccountListIndex.vue')
 		},
 		{
 			path: '/profile',
