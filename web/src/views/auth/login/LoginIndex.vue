@@ -48,7 +48,7 @@ const login = async () => {
 			<div class="w-full max-w-sm">
 				<div class="text-center mb-8">
 					<router-link to="/" class="inline-block hover:opacity-80 transition-opacity">
-						<img src="/favicon.svg" alt="Logo" class="w-16 h-16 mx-auto mb-4">
+						<img src="/favicon.png" alt="Logo" class="w-16 h-16 mx-auto mb-4">
 					</router-link>
 					<h2 class="text-2xl font-bold text-gray-800 mb-2">
 						Log in to your account

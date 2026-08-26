@@ -33,13 +33,11 @@
 								<span class="text-gray-800"> System</span>
 							</h1>
 							<p class="text-xl text-emerald-600 font-semibold">
-								Gonzaga, Cagayan
+								A Modern Digital Profiling Platform
 							</p>
 							<p class="text-gray-600 leading-relaxed max-w-lg mx-auto lg:mx-0 text-base">
-								A centralized digital platform for managing and maintaining
-								profiling records within the Municipality of Gonzaga,
-								Cagayan. The system provides secure, organized, and efficient
-								record management to support faster services and informed
+								A centralized digital platform for managing and maintaining profiling records. The system provides
+								secure, organized, and efficient record management to support faster services and informed
 								decision-making.
 							</p>
 						</div>
@@ -50,7 +48,7 @@
 								<!-- Decorative circles -->
 								<div class="absolute -top-10 -right-10 w-48 h-48 bg-emerald-200/30 rounded-full blur-3xl"></div>
 								<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-green-200/30 rounded-full blur-3xl"></div>
-								<img src="/favicon.svg"
+								<img src="/favicon.png"
 								     alt="Profiling System"
 								     class="w-72 h-72 object-contain animate-float drop-shadow-2xl">
 							</div>
@@ -63,7 +61,14 @@
 		<footer class="bg-white/50 backdrop-blur-sm border-t border-emerald-100/50">
 			<div class="container mx-auto px-6">
 				<div class="max-w-6xl mx-auto py-6 text-center text-sm text-gray-500">
-					© 2026 Municipality of Gonzaga, Cagayan. All Rights Reserved.
+					© 2026
+					<a href="https://github.com/ralphmarondev"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   class="text-emerald-600 font-medium hover:text-emerald-700 transition-colors">
+						ralphmarondev
+					</a>
+					. All Rights Reserved.
 				</div>
 			</div>
 		</footer>
