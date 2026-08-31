@@ -1,11 +1,11 @@
-# Eprofiling System
+# Registry
 
-A full-stack eProfiling System organized into separate frontend, backend, and documentation directories.
+A full-stack Profiling Management System organized into separate frontend, backend, and documentation directories.
 
 ## 📁 Project Structure
 
 ```text
-eprofiling/
+Registry/
 ├── docs/
 ├── server/
 └── web/
@@ -17,8 +17,7 @@ Contains documentation and API testing resources.
 
 ```text
 docs/
-└── hoppscotch/
-    └── *.json
+└── Registry.json
 ```
 
 The Hoppscotch JSON files contain API collections that can be imported into Hoppscotch for testing the backend API.
