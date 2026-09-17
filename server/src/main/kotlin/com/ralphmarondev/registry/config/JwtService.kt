@@ -1,14 +1,13 @@
 package com.ralphmarondev.registry.config
 
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.crypto.SecretKey
 
 @Service
 class JwtService {
-    private val key = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+    private val key: SecretKey = Jwts.SIG.HS256.key().build()
     private val accessTokenExpirationMs: Long = 1000L * 60 * 60 // 1 hour
     private val refreshTokenExpirationMs: Long = 1000L * 60 * 60 * 24 * 7 // 7 days
 
@@ -16,11 +15,11 @@ class JwtService {
         val now = Date()
         val expiry = Date(now.time + accessTokenExpirationMs)
         return Jwts.builder()
-            .setSubject(userId.toString())
+            .subject(userId.toString())
             .claim("username", username)
             .claim("role", role)
-            .setIssuedAt(now)
-            .setExpiration(expiry)
+            .issuedAt(now)
+            .expiration(expiry)
             .signWith(key)
             .compact()
     }
@@ -29,47 +28,47 @@ class JwtService {
         val now = Date()
         val expiry = Date(now.time + refreshTokenExpirationMs)
         return Jwts.builder()
-            .setSubject(userId.toString())
+            .subject(userId.toString())
             .claim("username", username)
-            .setIssuedAt(now)
-            .setExpiration(expiry)
+            .issuedAt(now)
+            .expiration(expiry)
             .signWith(key)
             .compact()
     }
 
     fun extractUserId(token: String): Long {
-        return Jwts.parserBuilder()
-            .setSigningKey(key)
+        return Jwts.parser()
+            .verifyWith(key)
             .build()
-            .parseClaimsJws(token)
-            .body.subject.toLong()
+            .parseSignedClaims(token)
+            .payload.subject.toLong()
     }
 
     fun extractUsername(token: String): String {
-        return Jwts.parserBuilder()
-            .setSigningKey(key)
+        return Jwts.parser()
+            .verifyWith(key)
             .build()
-            .parseClaimsJws(token)
-            .body
+            .parseSignedClaims(token)
+            .payload
             .get("username", String::class.java)
     }
 
     fun extractRole(token: String): String {
-        return Jwts.parserBuilder()
-            .setSigningKey(key)
+        return Jwts.parser()
+            .verifyWith(key)
             .build()
-            .parseClaimsJws(token)
-            .body
+            .parseSignedClaims(token)
+            .payload
             .get("role", String::class.java)
     }
 
     fun isTokenValid(token: String): Boolean {
         return try {
-            val claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+            val claims = Jwts.parser()
+                .verifyWith(key)
                 .build()
-                .parseClaimsJws(token)
-            !claims.body.expiration.before(Date())
+                .parseSignedClaims(token)
+            !claims.payload.expiration.before(Date())
         } catch (_: Exception) {
             false
         }
