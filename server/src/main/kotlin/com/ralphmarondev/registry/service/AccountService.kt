@@ -99,7 +99,7 @@ class AccountService(
             accessToken = accessToken,
             refreshToken = refreshToken,
             username = account.username,
-            role = account.role.id
+            role = account.role.name
         )
     }
 

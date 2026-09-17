@@ -9,7 +9,7 @@ data class LoginResponse(
     val accessToken: String,
     val refreshToken: String,
     val username: String,
-    val role: Long
+    val role: String
 )
 
 data class AccountResponse(
