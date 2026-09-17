@@ -25,9 +25,16 @@ const login = async () => {
 			username: username.value.trim(),
 			password: password.value.trim()
 		})
-		const {accessToken, refreshToken, account} = response.data
+
+		const {
+			accessToken,
+			refreshToken,
+			username: loggedInUsername,
+			role
+		} = response.data
+
 		authStore.setTokens(accessToken, refreshToken)
-		authStore.setAccount(account)
+		authStore.setAccount(loggedInUsername, role)
 		await router.push({name: 'dashboard'})
 	} catch (e: any) {
 		if (e.response?.data?.message) {

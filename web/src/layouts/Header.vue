@@ -12,7 +12,7 @@ const emit = defineEmits<{
 
 const isDropdownOpen = ref(false)
 
-const displayName = computed(() => authStore.account?.username ?? 'Guest User')
+const displayName = computed(() => authStore.username ?? 'Guest User')
 const userInitials = computed(() => {
 	const name = displayName.value
 	if (name === 'Guest User') return 'GU'
@@ -23,7 +23,8 @@ const userInitials = computed(() => {
 			.toUpperCase()
 			.slice(0, 2)
 })
-const userRole = computed(() => authStore.account?.role.name ?? '')
+const userRole = computed(() => authStore.role ?? ''
+)
 
 const toggleDropdown = () => {
 	isDropdownOpen.value = !isDropdownOpen.value

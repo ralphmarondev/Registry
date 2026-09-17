@@ -5,7 +5,8 @@ import {onMounted} from 'vue'
 
 const authStore = useAuthStore()
 onMounted(() => {
-	console.log(`Username: ${authStore.account?.username}`)
+	console.log(`Username: ${authStore.username}`)
+	console.log(`Role: ${authStore.role}`)
 })
 </script>
 
