@@ -98,7 +98,8 @@ class AccountService(
         return LoginResponse(
             accessToken = accessToken,
             refreshToken = refreshToken,
-            account = account.toAccountResponse()
+            username = account.username,
+            role = account.role.id
         )
     }
 
