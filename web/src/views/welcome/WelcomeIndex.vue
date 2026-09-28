@@ -5,10 +5,10 @@
 				<div class="max-w-6xl mx-auto flex items-center justify-between py-4">
 					<div class="flex items-center gap-3 group cursor-pointer">
 						<div class="w-10 h-10 bg-linear-to-br from-emerald-600 to-green-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 group-hover:scale-105 transition-all duration-300">
-							<span class="text-white font-bold text-lg">E</span>
+							<span class="text-white font-bold text-lg">R</span>
 						</div>
 						<span class="text-2xl font-bold bg-linear-to-r from-emerald-700 to-green-600 bg-clip-text text-transparent group-hover:from-emerald-600 group-hover:to-green-500 transition-all duration-300">
-							EProfile
+							Registry
 						</span>
 					</div>
 					<router-link
